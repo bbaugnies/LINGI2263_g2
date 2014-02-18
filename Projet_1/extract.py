@@ -5,7 +5,8 @@ weeks = re.compile('weeks?')
 months = re.compile('months?')
 years = re.compile('years?')
 
-gender = [(re.compile(' girl | woman | female | lady '), 0) , (re.compile(' boy | man | male '), 1)]
+female = re.compile(' girl | woman | female | lady ')
+male = re.compile(' boy | man | male ')
 number = re.compile('\d+')
 
 
@@ -60,16 +61,19 @@ def get_age(s):
 
 
 def get_gender(s):
-	matches = []
-	for re in gender:
-		m = re.search(s)
-		if m != None:
-			matches += [(m.start(), m)]
-	matches.sort()
+	m = male.search(s)
+	f = female.search(s)
+	if m == None:
+		if f == None:
+			return '-'
+		else:
+			return 'female'
+	else:
+		return 'male'
 
 
 p = Transcript_gen('medical_transcripts.txt')
 s = p.getnext()
 while s != '':
-	print(get_age(s) +' ' + get_gender(s))
+	print(get_age(s)+ ' ' + get_gender(s))
 	s= p.getnext()
