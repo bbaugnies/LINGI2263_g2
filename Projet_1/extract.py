@@ -29,10 +29,19 @@ male    = re.compile(r' boy | man | male ')
 weight  = re.compile(r'weigh[st] [^.]*'+float_string+' (pounds?|kilos?|kg)')
 
 # temperature
-temp    = re.compile(r'([tT]emperature(:)?(\n)?( )?(\n)?((\w+ ){,5})(\n)?(\d+(\.\d*)?|\.\d))' +
+temp    = re.compile(r'([tT]emperatures?( )?:?\n?( )?\n?(([a-zA-Z]+ ?){,5}?)?\n?( )?(\d+(\.\d*)?|\.\d))' +
                      r'|' +
-                     r'(((\d+(\.\d*)?|\.\d) ([dD]egrees )?([fF]ahrenheit )?[tT]emperature)(?!((\n)?(:)?( is )?)))')
+                     r'( ((T)|(TEMP)|([tT]emp)):?\n? (\d+(\.\d*)?|\.\d))' +
+                     r'|' +
+                     r'(((\d+(\.\d*)?|\.\d) ([dD]egrees )?([fF]ahrenheit )?[tT]emperature)(?!(\n?:?( is )?)))')
 
+pulse   = re.compile(r'([pP]ulses?:?\n?( )?\n?(([a-zA-Z]+ ?){,3}?)?\n?( )?(\d+(\.\d*)?|\.\d))'+
+                     r'|' +
+                     r'( P:?\n? (\d+(\.\d*)?|\.\d))')
+
+breath  = re.compile(r'([rR]espiratory rate\n?( )?\n?:?\n?(([a-zA-Z]+ ?){,3}?)?\n?( )?(\d+(\.\d*)?|\.\d))' +
+                     r'|' +
+                     r'( RR:?\n? (\d+(\.\d*)?|\.\d))')
 
 class TranscriptGen:
     k = 0
@@ -66,11 +75,11 @@ class TranscriptGen:
 
 # Supposes the first mentionned age is most likely to be the patient's
 # does not cover fully typed out numbers (e.g. 'two-and-a-half-year-old')
-def get_age(s):
+def getAge(transcript):
     matches = []
     # searches for any appearances of the keywords associated to the age
     for re in age:
-        m = re.search(s)
+        m = re.search(transcript)
         if m is not None:
             matches += [(m.start(), m)]
     matches.sort()
@@ -97,20 +106,27 @@ def getTemp(transcript):
     if matches is None:
         return 'NA'
     else:
-        m = matches.group()
-        print('m', m)
-        t = number.search(m).group()
-        print(t)
-        t = float(t)
+        t = float(number.search(matches.group()).group())
         if t > 45:  # corporal temperature way above lethal one in Celsius!
             return round((t - 32.0) * 5.0/9.0, 2)
         return t
 
 
+def getPulse(transcript):
+    matches = pulse.search(transcript)
+    if matches is None:
+        return 'NA'
+    else:
+        p = float(number.search(matches.group()).group())
+        if 1 < p < 4:
+            return 'normal'
 
-def get_gender(s):
-    m = male.search(s)
-    f = female.search(s)
+        return p if p > 4 else 'NA'
+
+
+def getGender(transcript):
+    m = male.search(transcript)
+    f = female.search(transcript)
     if m is None and f is not None:
         return 'Female'
     elif f is None and m is not None:
@@ -123,16 +139,25 @@ def get_gender(s):
     else:
         return 'NA'
 
+
+def getBreath(transcript):
+    matches = breath.search(transcript)
+    if matches is None:
+        return 'NA'
+    else:
+        return float(number.search(matches.group()).group())
+
 p = TranscriptGen('medical_transcripts.txt')
 transcripts = p.extract()
 
 exp = Exporter(Exporter.finemode)
 i = 1
 for transcript in transcripts:
-    temperature = str(getTemp(transcript))
-    if temperature != 'NA':
-        TranscriptGen.k +=1
-    exp.addToTable(numb=str(i),  gender=get_gender(transcript), age=str(get_age(transcript)), bodyTemp=temperature)
+    p = str(getBreath(transcript))
+    if p != 'NA':
+        TranscriptGen.k += 1
+    exp.addToTable(numb=str(i),  gender=getGender(transcript), age=str(getAge(transcript)),
+                   bodyTemp=str(getTemp(transcript)), pulse=str(getPulse(transcript)), breath=str(getBreath(transcript)))
     i += 1
 print(TranscriptGen.k)
 exp.write()

@@ -15,7 +15,7 @@ class Exporter:
             <body><div class="container"> <div class="row"> <div class="col-xs-12">"""
 
     rawTableHead = 'Transcript number\tGender\tAge\tWeight\tHeight\tBMI\tBody temperature\tPulse\tBreathing frequency' \
-                   '\tBlood pressure (systolic)\tBlood pressure (diastolic)\tOxygen saturation\t\n'
+                   '\tBlood pressure (systolic/diastolic)\tOxygen saturation\t\n'
 
     tableHead = """ <div class="table-responsive">
                         <table class="table table-condensed table-hover tablesorter" id="results">
@@ -30,8 +30,7 @@ class Exporter:
                                       <th>Body temperature</th>
                                       <th>Pulse</th>
                                       <th>Breathing frequency</th>
-                                      <th>Blood pressure (systolic)</th>
-                                      <th>Blood pressure (diastolic)</th>
+                                      <th>Blood pressure (systolic/diastolic)</th>
                                       <th>Oxygen saturation</th>
                                   </tr>
                             </thead>
@@ -55,10 +54,31 @@ class Exporter:
     def __init__(self, mode):
         self.mode = mode
 
-    def addToTable(self, numb='/', gender='NA', age='NA', weight='NA', height='NA', bmi='NA', bodyTemp='NA', pulse='NA', breath='NA', bloodP_sys='NA', bloodP_dias='NA', o2sat='NA'):
+    def addToTable(self, numb='/', gender='NA', age='NA', weight='NA', height='NA', bmi='NA', bodyTemp='NA', pulse='NA', breath='NA', bloodP='NA', o2sat='NA'):
+
+        if age != 'NA':
+            c = 0
+            a = float(age)
+            standardPulse = ('125', '105', '100', '100', '80')
+            if a < 3.0/12.0:
+                c = 0
+            elif a < 6.0/12.0:
+                c = 1
+            elif a < 1:
+                c = 2
+            elif a < 10:
+                c = 3
+            else:
+                c = 4
+
+            if pulse == 'normal':
+                pulse = 'i ' + standardPulse[c]
+        elif pulse == 'normal':
+            pulse = '(normal)'
+
         if self.mode == Exporter.rawmode:
             self.table += str(numb) + '\t' + gender + '\t' + age + '\t' + weight + '\t' + bmi + '\t' + bodyTemp + '\t' +\
-                          pulse + '\t' + breath + '\t' + bloodP_sys + '\t' + bloodP_dias + '\t' + o2sat + '\n'
+                          pulse + '\t' + breath + '\t' + bloodP + '\t' + o2sat + '\n'
         else:
             self.table += """
                           <tr>
@@ -71,8 +91,7 @@ class Exporter:
                                   <td>"""+  bodyTemp      +"""</td>
                                   <td>"""+  pulse         +"""</td>
                                   <td>"""+  breath        +"""</td>
-                                  <td>"""+  bloodP_sys    +"""</td>
-                                  <td>"""+  bloodP_dias   +"""</td>
+                                  <td>"""+  bloodP        +"""</td>
                                   <td>"""+  o2sat         +"""</td>
                               </tr>
                           """
