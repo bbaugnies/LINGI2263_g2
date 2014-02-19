@@ -5,6 +5,7 @@ from io import SEEK_END, SEEK_SET
 from exporter import Exporter
 import math
 import re
+import string
 
 re.IGNORECASE = True
 
@@ -14,6 +15,8 @@ days    = re.compile(r'days?')
 weeks   = re.compile(r'weeks?')
 months  = re.compile(r'months?')
 years   = re.compile(r'years?')
+pounds = re.compile(r'pounds?')
+kilos = re.compile(r'kg|kilo(gram)?s?(\s|['+string.punctuation+'])')
 number  = re.compile(float_string)
 
 
@@ -22,11 +25,13 @@ age     = [re.compile(r' '+float_string+r'[ -](years?)?(months?)?(weeks?)?(days?
            re.compile(float_string+r' y/o '),
            re.compile(float_string+r' (years)?(months)? of age')]
 # gender
-female  = re.compile(r' girl | woman | female | lady ')
-male    = re.compile(r' boy | man | male ')
+female = re.compile(r'( girl| woman| female| lady| Mrs.| Ms.)(\s|['+string.punctuation+'])')
+male = re.compile(r'( boy| man| male| Mr.)(\s|['+string.punctuation+'])')
+
 
 # weight
-weight  = re.compile(r'weigh[st] [^.]*'+float_string+' (pounds?|kilos?|kg)')
+weight 	= [re.compile(r'weigh[st] [^.]*\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)'), 
+	   re.compile(r'\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)')]
 
 # temperature
 temp    = re.compile(r'([tT]emperatures?( )?:?\n?( )?\n?(([a-zA-Z]+ ?){,5}?)?\n?( )?(\d+(\.\d*)?|\.\d))' +
@@ -138,6 +143,23 @@ def getGender(transcript):
             return 'Female'
     else:
         return 'NA'
+
+def get_weight(s):
+	for re in weight:
+		w = re.search(s)
+		if w != None:
+			break
+	if w != None:
+		w = w.group()
+		if pounds.search(w) != None:
+			return round(float(number.search(w).group()), 2)
+		elif kilos.search(s) != None:
+			return round(float(number.search(w).group()), 2)
+		else:
+			return 'NA'
+	else :
+		return 'NA'
+		
 
 
 def getBreath(transcript):
