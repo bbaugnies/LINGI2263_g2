@@ -144,9 +144,9 @@ def getGender(transcript):
     else:
         return 'NA'
 
-def get_weight(s):
+def getWeight(s):
 	# "arbitrary" minimum weight of 30kg for an adult
-	a = get_age(s)
+	a = getAge(s)
 	if a != 'NA':
 		a = a>=18
 	else: a = False
