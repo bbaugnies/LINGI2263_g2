@@ -21,17 +21,17 @@ number  = re.compile(float_string)
 
 
 # age
-age     = [re.compile(r' '+float_string+r'[ -](years?)?(months?)?(weeks?)?(days?)?[ -]old'),
-           re.compile(float_string+r' y/o '),
-           re.compile(float_string+r' (years)?(months)? of age')]
+age     = [re.compile(r'\s'+float_string+r'[ -](years?)?(months?)?(weeks?)?(days?)?[ -]old'),
+           re.compile(float_string+r'\sy/o\s'),
+           re.compile(float_string+r'\s(years)?(months)? of age')]
 # gender
-female = re.compile(r'( girl| woman| female| lady| Mrs.| Ms.)(\s|['+string.punctuation+'])')
-male = re.compile(r'( boy| man| male| Mr.)(\s|['+string.punctuation+'])')
+female = re.compile(r'(\sgirl|woman|female|\slady|Mrs.|Ms.)(\s|['+string.punctuation+'])')
+male = re.compile(r'(\sboy|\sman|\smale|Mr.|gentleman)(\s|['+string.punctuation+'])')
 
 
 # weight
-weight     = [re.compile(r'weigh[st] [^.]*\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)'),
-              re.compile(r'\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)')]
+weight 	= [re.compile(r'weigh[st]\s[^.]{0,5}\d+[.]?\d*\s(pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)'), 
+	   re.compile(r'\d+[.]?\d*\s(pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)')]
 
 # temperature
 temp    = re.compile(r'([tT]emperatures?( )?:?\n?( )?\n?(([a-zA-Z]+ ?){,5}?)?\n?( )?(\d+(\.\d*)?|\.\d))' +
@@ -144,22 +144,33 @@ def getGender(transcript):
     else:
         return 'NA'
 
-def getWeight(transcript):
-    for re in weight:
-        w = re.search(transcript)
-        if w != None:
-            break
-            #TODO: change != by is not
-    if w != None:
-        w = w.group()
-        if pounds.search(w) != None:
-            return round(float(number.search(w).group())/2, 2)
-        elif kilos.search(transcript) != None:
-            return round(float(number.search(w).group()), 2)
-        else:
-            return 'NA'
-    else :
-        return 'NA'
+def get_weight(s):
+	# "arbitrary" minimum weight of 30kg for an adult
+	a = get_age(s)
+	if a != 'NA':
+		a = a>=18
+	else: a = False
+
+	for re in weight:
+		w = re.search(s)
+		if w is not None:
+			break
+	if w is not None:
+		w = w.group()
+		if pounds.search(w) != None:
+			w=round(float(number.search(w).group())/2.20462, 2)
+			if a and w>30:
+				return w
+			else:
+				return 'NA'
+		elif kilos.search(s) != None:
+			w=round(float(number.search(w).group()), 2)
+			if a and w>30:
+				return w
+			else:
+				return 'NA'
+	else :
+		return 'NA'
         
 
 
