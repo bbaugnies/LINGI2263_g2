@@ -1,19 +1,26 @@
 #!/usr/local/bin/python3
+
+## imports
 from io import SEEK_END, SEEK_SET
 from exporter import Exporter
-
+import math
 import re
+
+# creation of the regex's for the age:
 age = [re.compile(' \d+[ -](years?)?(months?)?(weeks?)?(days?)?[ -]old'), re.compile('\d+ y/o '), re.compile('\d+ (years)?(months)? of age')]
 days = re.compile('days?')
 weeks = re.compile('weeks?')
 months = re.compile('months?')
 years = re.compile('years?')
 
+# creation of the regex's fur the gender
 female = re.compile(' girl | woman | female | lady ')
 male = re.compile(' boy | man | male ')
 
+# creation of the regex's for the weight
 weight = re.compile('weigh[st] [^.]*\d+ (pounds?|kilos?|kg)')
 
+# creation of the regex's for a number
 number = re.compile('\d+')
 
 
@@ -22,7 +29,6 @@ class TranscriptGen:
         self.fo = open(file, 'r', encoding='utf-16')
         self.tran = ''
         self.line = self.fo.readline()
-    
 
     def extract(self):
 
@@ -46,51 +52,56 @@ class TranscriptGen:
 
             pos = self.fo.tell()
 
+
 # Supposes the first mentionned age is most likely to be the patient's
 # does not cover fully typed out numbers (e.g. 'two-and-a-half-year-old')
 def get_age(s):
     matches = []
+    # searches for any appearances of the keywords associated to the age
     for re in age:
         m = re.search(s)
-        if m != None:
+        if m is not None:
             matches += [(m.start(), m)]
     matches.sort()
-    if matches != []:
+
+    # only analyze the first occurence of any keyword
+    if matches:
         first = matches[0][1].group()
         num = number.search(matches[0][1].group()).group()
-        if days.search(first) != None :
-            return num+' d'
-        elif months.search(first) != None:
-            return num + ' m'
-        elif weeks.search(first) != None:
-            return num + ' w'
+
+        if days.search(first) is not None:
+            return math.floor(num/365)
+        elif months.search(first) is not None:
+            return math.floor(num/12)
+        elif weeks.search(first) is not None:
+            return math.floor(num/52)
         else:
-            return num + ' y'
+            return num
     else:
-        return 'none'
+        return 'NA'
 
 
 def get_gender(s):
     m = male.search(s)
     f = female.search(s)
-    if m == None and f != None:
-        return 'female'
-    elif f == None and m != None:
-        return 'male'
-    elif f != None and m != None:
-        if m.start()<f.start():
-            return 'male'
+    if m is None and f is not None:
+        return 'Female'
+    elif f is None and m is not None:
+        return 'Male'
+    elif f is not None and m is not None:
+        if m.start() < f.start():
+            return 'Male'
         else:
-            return 'female'
+            return 'Female'
     else:
-        return '-'
+        return 'NA'
 
 
 p = TranscriptGen('medical_transcripts.txt')
 transcripts = p.extract()
 
 exp = Exporter(Exporter.finemode)
-i = 0
+i = 1
 for transcript in transcripts:
     exp.addToTable(i, get_gender(transcript), get_age(transcript), 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA')
     i += 1
