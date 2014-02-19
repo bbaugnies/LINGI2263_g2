@@ -9,29 +9,29 @@ import re
 re.IGNORECASE = True
 
 # utilities regex's
-float_string = """(\d+(\.\d*)?|\.\d)"""
-days    = re.compile('days?')
-weeks   = re.compile('weeks?')
-months  = re.compile('months?')
-years   = re.compile('years?')
+float_string = r'(\d+(\.\d*)?|\.\d)'
+days    = re.compile(r'days?')
+weeks   = re.compile(r'weeks?')
+months  = re.compile(r'months?')
+years   = re.compile(r'years?')
 number  = re.compile(float_string)
 
 
 # age
-age     = [re.compile(' '+float_string+'[ -](years?)?(months?)?(weeks?)?(days?)?[ -]old'),
-           re.compile(float_string+' y/o '),
-           re.compile(float_string+' (years)?(months)? of age')]
+age     = [re.compile(r' '+float_string+r'[ -](years?)?(months?)?(weeks?)?(days?)?[ -]old'),
+           re.compile(float_string+r' y/o '),
+           re.compile(float_string+r' (years)?(months)? of age')]
 # gender
-female  = re.compile(' girl | woman | female | lady ')
-male    = re.compile(' boy | man | male ')
+female  = re.compile(r' girl | woman | female | lady ')
+male    = re.compile(r' boy | man | male ')
 
 # weight
-weight  = re.compile('weigh[st] [^.]*'+float_string+' (pounds?|kilos?|kg)')
+weight  = re.compile(r'weigh[st] [^.]*'+float_string+' (pounds?|kilos?|kg)')
 
 # temperature
-temp    = re.compile('((\d+(\.\d*)?|\.\d) ([dD]egrees )?([fF]ahrenheit )?[tT]emperature)' +
-                     '|' +
-                     '([tT]emperature (is )?(of )?(up to )?(has ranged between )?(\d+(\.\d*)?|\.\d))')
+temp    = re.compile(r'([tT]emperature(:)?(\n)?( )?(\n)?((\w+ ){,5})(\n)?(\d+(\.\d*)?|\.\d))' +
+                     r'|' +
+                     r'(((\d+(\.\d*)?|\.\d) ([dD]egrees )?([fF]ahrenheit )?[tT]emperature)(?!((\n)?(:)?( is )?)))')
 
 
 class TranscriptGen:
@@ -97,7 +97,11 @@ def getTemp(transcript):
     if matches is None:
         return 'NA'
     else:
-        t = float(number.search(matches.group()).group())
+        m = matches.group()
+        print('m', m)
+        t = number.search(m).group()
+        print(t)
+        t = float(t)
         if t > 45:  # corporal temperature way above lethal one in Celsius!
             return round((t - 32.0) * 5.0/9.0, 2)
         return t
