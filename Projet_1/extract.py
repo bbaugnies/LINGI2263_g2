@@ -6,27 +6,36 @@ from exporter import Exporter
 import math
 import re
 
-# creation of the regex's for the age:
-age = [re.compile(' \d+[ -](years?)?(months?)?(weeks?)?(days?)?[ -]old'), re.compile('\d+ y/o '), re.compile('\d+ (years)?(months)? of age')]
-days = re.compile('days?')
-weeks = re.compile('weeks?')
-months = re.compile('months?')
-years = re.compile('years?')
+re.IGNORECASE = True
 
-# creation of the regex's fur the gender
-female = re.compile(' girl | woman | female | lady ')
-male = re.compile(' boy | man | male ')
+# utilities regex's
+float_string = """(\d+(\.\d*)?|\.\d)"""
+days    = re.compile('days?')
+weeks   = re.compile('weeks?')
+months  = re.compile('months?')
+years   = re.compile('years?')
+number  = re.compile(float_string)
 
-# creation of the regex's for the weight
-weight = re.compile('weigh[st] [^.]*\d+ (pounds?|kilos?|kg)')
 
-# creation of the regex's for a number
-number = re.compile('\d+')
+# age
+age     = [re.compile(' '+float_string+'[ -](years?)?(months?)?(weeks?)?(days?)?[ -]old'),
+           re.compile(float_string+' y/o '),
+           re.compile(float_string+' (years)?(months)? of age')]
+# gender
+female  = re.compile(' girl | woman | female | lady ')
+male    = re.compile(' boy | man | male ')
 
-#creation of the body temperature regex:
-temp = re.compile('[tT]emperature \d+')
+# weight
+weight  = re.compile('weigh[st] [^.]*'+float_string+' (pounds?|kilos?|kg)')
+
+# temperature
+temp    = re.compile('((\d+(\.\d*)?|\.\d) ([dD]egrees )?([fF]ahrenheit )?[tT]emperature)' +
+                     '|' +
+                     '([tT]emperature (is )?(of )?(up to )?(has ranged between )?(\d+(\.\d*)?|\.\d))')
+
 
 class TranscriptGen:
+    k = 0
     def __init__(self, file):
         self.fo = open(file, 'r', encoding='utf-16')
         self.tran = ''
@@ -82,12 +91,16 @@ def get_age(s):
     else:
         return 'NA'
 
+
 def getTemp(transcript):
     matches = temp.search(transcript)
     if matches is None:
         return 'NA'
     else:
-        return float(number.search(matches.group()).group())
+        t = float(number.search(matches.group()).group())
+        if t > 45:  # corporal temperature way above lethal one in Celsius!
+            return round((t - 32.0) * 5.0/9.0, 2)
+        return t
 
 
 
@@ -106,15 +119,16 @@ def get_gender(s):
     else:
         return 'NA'
 
-
 p = TranscriptGen('medical_transcripts.txt')
 transcripts = p.extract()
 
 exp = Exporter(Exporter.finemode)
 i = 1
 for transcript in transcripts:
-
-    exp.addToTable(numb=str(i),  gender=get_gender(transcript), age=str(get_age(transcript)), bodyTemp=str(getTemp(transcript)))
+    temperature = str(getTemp(transcript))
+    if temperature != 'NA':
+        TranscriptGen.k +=1
+    exp.addToTable(numb=str(i),  gender=get_gender(transcript), age=str(get_age(transcript)), bodyTemp=temperature)
     i += 1
-
+print(TranscriptGen.k)
 exp.write()
