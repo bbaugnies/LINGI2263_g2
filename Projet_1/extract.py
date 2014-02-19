@@ -14,6 +14,8 @@ days    = re.compile(r'days?')
 weeks   = re.compile(r'weeks?')
 months  = re.compile(r'months?')
 years   = re.compile(r'years?')
+pounds = re.compile('pounds?', re.IGNORECASE)
+kilos = re.compile('kg|kilo(gram)?s?(\s|['+string.punctuation+'])', re.IGNORECASE)
 number  = re.compile(float_string)
 
 
@@ -22,11 +24,13 @@ age     = [re.compile(r' '+float_string+r'[ -](years?)?(months?)?(weeks?)?(days?
            re.compile(float_string+r' y/o '),
            re.compile(float_string+r' (years)?(months)? of age')]
 # gender
-female  = re.compile(r' girl | woman | female | lady ')
-male    = re.compile(r' boy | man | male ')
+female = re.compile(r'( girl| woman| female| lady| Mrs.| Ms.)(\s|['+string.punctuation+'])', re.IGNORECASE)
+male = re.compile(r'( boy| man| male| Mr.)(\s|['+string.punctuation+'])', re.IGNORECASE)
+
 
 # weight
-weight  = re.compile(r'weigh[st] [^.]*'+float_string+' (pounds?|kilos?|kg)')
+weight 	= [re.compile(r'weigh[st] [^.]*\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)', re.IGNORECASE), 
+	   re.compile(r'\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)', re.IGNORECASE)]
 
 # temperature
 temp    = re.compile(r'([tT]emperature(:)?(\n)?( )?(\n)?((\w+ ){,5})(\n)?(\d+(\.\d*)?|\.\d))' +
@@ -122,6 +126,23 @@ def get_gender(s):
             return 'Female'
     else:
         return 'NA'
+
+def get_weight(s):
+	for re in weight:
+		w = re.search(s)
+		if w != None:
+			break
+	if w != None:
+		w = w.group()
+		if pounds.search(w) != None:
+			return round(float(number.search(w).group()), 2)
+		elif kilos.search(s) != None:
+			return round(float(number.search(w).group()), 2)
+		else:
+			return 'NA'
+	else :
+		return 'NA'
+		
 
 p = TranscriptGen('medical_transcripts.txt')
 transcripts = p.extract()
