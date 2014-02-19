@@ -30,8 +30,8 @@ male = re.compile(r'( boy| man| male| Mr.)(\s|['+string.punctuation+'])')
 
 
 # weight
-weight 	= [re.compile(r'weigh[st] [^.]*\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)'), 
-	   re.compile(r'\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)')]
+weight     = [re.compile(r'weigh[st] [^.]*\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)'), 
+       re.compile(r'\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)')]
 
 # temperature
 temp    = re.compile(r'([tT]emperatures?( )?:?\n?( )?\n?(([a-zA-Z]+ ?){,5}?)?\n?( )?(\d+(\.\d*)?|\.\d))' +
@@ -144,22 +144,23 @@ def getGender(transcript):
     else:
         return 'NA'
 
-def get_weight(s):
-	for re in weight:
-		w = re.search(s)
-		if w != None:
-			break
-	if w != None:
-		w = w.group()
-		if pounds.search(w) != None:
-			return round(float(number.search(w).group()), 2)
-		elif kilos.search(s) != None:
-			return round(float(number.search(w).group()), 2)
-		else:
-			return 'NA'
-	else :
-		return 'NA'
-		
+def getWeight(transcript):
+    for re in weight:
+        w = re.search(transcript)
+        if w != None:
+            break
+            #TODO: change != by is not
+    if w != None:
+        w = w.group()
+        if pounds.search(w) != None:
+            return round(float(number.search(w).group())/2, 2)
+        elif kilos.search(transcript) != None:
+            return round(float(number.search(w).group()), 2)
+        else:
+            return 'NA'
+    else :
+        return 'NA'
+        
 
 
 def getBreath(transcript):
@@ -175,11 +176,11 @@ transcripts = p.extract()
 exp = Exporter(Exporter.finemode)
 i = 1
 for transcript in transcripts:
-    p = str(getBreath(transcript))
+    p = str(getWeight(transcript))
     if p != 'NA':
         TranscriptGen.k += 1
     exp.addToTable(numb=str(i),  gender=getGender(transcript), age=str(getAge(transcript)),
-                   bodyTemp=str(getTemp(transcript)), pulse=str(getPulse(transcript)), breath=str(getBreath(transcript)))
+                   bodyTemp=str(getTemp(transcript)), pulse=str(getPulse(transcript)), breath=str(getBreath(transcript)), weight=str(getWeight(transcript)))
     i += 1
 print(TranscriptGen.k)
 exp.write()
