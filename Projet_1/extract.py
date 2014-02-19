@@ -1,5 +1,6 @@
 #!/usr/local/bin/python3
 from io import SEEK_END, SEEK_SET
+from exporter import Exporter
 
 import re
 age = [re.compile(' \d+[ -](years?)?(months?)?(weeks?)?(days?)?[ -]old'), re.compile('\d+ y/o '), re.compile('\d+ (years)?(months)? of age')]
@@ -82,6 +83,8 @@ p = TranscriptGen('medical_transcripts.txt')
 s = p.extract()
 transcript = next(s)
 
+e = Exporter()
+
 try:
     while transcript != '':
         print(get_age(transcript), ' ',  get_gender(transcript))
@@ -93,3 +96,4 @@ finally:
     del p
     del s
     del transcript
+
