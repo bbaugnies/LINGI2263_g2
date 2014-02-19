@@ -30,8 +30,8 @@ male = re.compile(r'( boy| man| male| Mr.)(\s|['+string.punctuation+'])')
 
 
 # weight
-weight     = [re.compile(r'weigh[st] [^.]*\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)'), 
-       re.compile(r'\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)')]
+weight     = [re.compile(r'weigh[st] [^.]*\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)'),
+              re.compile(r'\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)')]
 
 # temperature
 temp    = re.compile(r'([tT]emperatures?( )?:?\n?( )?\n?(([a-zA-Z]+ ?){,5}?)?\n?( )?(\d+(\.\d*)?|\.\d))' +
