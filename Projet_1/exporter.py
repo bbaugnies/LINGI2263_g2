@@ -7,27 +7,32 @@ class Exporter:
             </head>
             <body><div class="container"> <div class="row"> <div class="col-xs-12">"""
 
+    rawTableHead = 'Transcript number\tGender\tAge\tWeight\tHeight\tBMI\tBody temperature\tPulse\tBreathing frequency' \
+                   '\tBlood pressure (systolic)\tBlood pressure (diastolic)\tOxygen saturation\t\n'
+
     tableHead = """ <div class="table-responsive">
-                      <table class="table table-condensed table-hover">
-                      <thead>
-                            <tr class="success">
-                                <th>#</th>
-                                <th>Gender</th>
-                                <th>Age</th>
-                                <th>Weight</th>
-                                <th>Height</th>
-                                <th>BMI</th>
-                                <th>Body temperature</th>
-                                <th>Pulse</th>
-                                <th>Breathing frequency</th>
-                                <th>Blood pressure (systolic)</th>
-                                <th>Blood pressure (diastolic)</th>
-                                <th>Oxygen saturation</th>
-                            </tr>
-                            </thead><tbody>"""
-    rawTableHead = 'Transcript number\tGender\tAge\tWeight\tHeight\tBMI\tBody temperature\tPulse\tBreathing frequency\tBlood pressure (systolic)\tBlood pressure (diastolic)\tOxygen saturation\t\n'
+                        <table class="table table-condensed table-hover">
+                            <thead>
+                                  <tr class="success">
+                                      <th>#</th>
+                                      <th>Gender</th>
+                                      <th>Age</th>
+                                      <th>Weight</th>
+                                      <th>Height</th>
+                                      <th>BMI</th>
+                                      <th>Body temperature</th>
+                                      <th>Pulse</th>
+                                      <th>Breathing frequency</th>
+                                      <th>Blood pressure (systolic)</th>
+                                      <th>Blood pressure (diastolic)</th>
+                                      <th>Oxygen saturation</th>
+                                  </tr>
+                            </thead>
+                            <tbody>"""
     table = ''
-    tableEnd = """</tbody></table> </div>"""
+    tableEnd = """          </tbody>
+                        </table>
+                    </div>"""
     end = """</div></div></div></body></html>"""
     rawmode = 1
     finemode = 0
@@ -42,18 +47,18 @@ class Exporter:
         else:
             self.table += """
                           <tr>
-                                  <th>"""+str(numb)+"""</th>
-                                  <th>"""+gender+"""</th>
-                                  <th>"""+age+"""</th>
-                                  <th>"""+weight+"""</th>
-                                  <th>"""+height+"""</th>
-                                  <th>"""+bmi+"""</th>
-                                  <th>"""+bodyTemp+"""</th>
-                                  <th>"""+pulse+"""</th>
-                                  <th>"""+breath+"""</th>
-                                  <th>"""+bloodP_sys+"""</th>
-                                  <th>"""+bloodP_dias+"""</th>
-                                  <th>"""+o2sat+"""</th>
+                                  <td>"""+  numb          +"""</td>
+                                  <td>"""+  gender        +"""</td>
+                                  <td>"""+  age           +"""</td>
+                                  <td>"""+  weight        +"""</td>
+                                  <td>"""+  height        +"""</td>
+                                  <td>"""+  bmi           +"""</td>
+                                  <td>"""+  bodyTemp      +"""</td>
+                                  <td>"""+  pulse         +"""</td>
+                                  <td>"""+  breath        +"""</td>
+                                  <td>"""+  bloodP_sys    +"""</td>
+                                  <td>"""+  bloodP_dias   +"""</td>
+                                  <td>"""+  o2sat         +"""</td>
                               </tr>
                           """
 

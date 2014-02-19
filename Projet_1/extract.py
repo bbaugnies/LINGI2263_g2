@@ -67,7 +67,7 @@ def get_age(s):
     # only analyze the first occurence of any keyword
     if matches:
         first = matches[0][1].group()
-        num = number.search(matches[0][1].group()).group()
+        num = float(number.search(matches[0][1].group()).group())
 
         if days.search(first) is not None:
             return math.floor(num/365)
@@ -103,7 +103,7 @@ transcripts = p.extract()
 exp = Exporter(Exporter.finemode)
 i = 1
 for transcript in transcripts:
-    exp.addToTable(i, get_gender(transcript), get_age(transcript), 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA')
+    exp.addToTable(str(i), get_gender(transcript), str(get_age(transcript)), 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA')
     i += 1
 
 exp.write()
