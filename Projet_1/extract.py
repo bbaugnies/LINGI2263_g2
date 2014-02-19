@@ -1,5 +1,6 @@
 #!/usr/local/bin/python3
 from io import SEEK_END, SEEK_SET
+from exporter import Exporter
 
 import re
 age = [re.compile(' \d+[ -](years?)?(months?)?(weeks?)?(days?)?[ -]old'), re.compile('\d+ y/o '), re.compile('\d+ (years)?(months)? of age')]
@@ -70,33 +71,28 @@ def get_age(s):
 
 
 def get_gender(s):
-	m = male.search(s)
-	f = female.search(s)
-	if m == None and f != None:
-		return 'female'
-	elif f == None and m != None:
-		return 'male'
-	elif f != None and m != None:
-		if m.start()<f.start():
-			return 'male'
-		else:
-			return 'female'
-	else:
-		return '-'
+    m = male.search(s)
+    f = female.search(s)
+    if m == None and f != None:
+        return 'female'
+    elif f == None and m != None:
+        return 'male'
+    elif f != None and m != None:
+        if m.start()<f.start():
+            return 'male'
+        else:
+            return 'female'
+    else:
+        return '-'
 
 
 p = TranscriptGen('medical_transcripts.txt')
-s = p.extract()
-transcript = next(s)
+transcripts = p.extract()
 
-try:
-    while transcript != '':
-        print(get_age(transcript), ' ',  get_gender(transcript))
-        transcript = next(s)
+exp = Exporter(Exporter.finemode)
+i = 0
+for transcript in transcripts:
+    exp.addToTable(i, get_gender(transcript), get_age(transcript), 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA')
+    i += 1
 
-except StopIteration:
-    print('done')
-finally:
-    del p
-    del s
-    del transcript
+exp.write()
