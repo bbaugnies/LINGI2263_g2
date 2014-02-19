@@ -1,3 +1,6 @@
+#!/usr/local/bin/python3
+from io import SEEK_END, SEEK_SET
+
 import re
 age = [re.compile(' \d+[ -](years?)?(months?)?(weeks?)?(days?)?[ -]old'), re.compile('\d+ y/o '), re.compile('\d+ (years)?(months)? of age')]
 days = re.compile('days?')
@@ -10,31 +13,34 @@ male = re.compile(' boy | man | male ')
 number = re.compile('\d+')
 
 
-class Transcript_gen:
+class TranscriptGen:
     def __init__(self, file):
         self.fo = open(file, 'r', encoding='utf-16')
         self.tran = ''
         self.line = self.fo.readline()
     
-    # not used, does not terminate loop correctly
+
     def extract(self):
-        while self.line != '' :
-            while self.line != '<transcript_end>\n' :
+
+        # get the number of lines in the file
+        pos = self.fo.tell()
+        self.fo.seek(0, SEEK_END)
+        end = self.fo.tell()
+        self.fo.seek(pos, SEEK_SET)
+
+        # allow a little bit of flexibility: 5 blank lines at the end of the file
+        while end-pos >= 5:
+
+            while self.line != '<transcript_end>\n':
                 self.tran += self.line
                 self.line = self.fo.readline()
+
             yield self.tran
+
             self.tran = ''
             self.line = self.fo.readline()
-        print('doneloop')
 
-    # Returns next transcript
-    def getnext(self):
-        ntran = ''
-        while (self.line!='<transcript_end>\n' and self.line != ''):
-            ntran += self.line
-            self.line = self.fo.readline()
-        self.line = self.fo.readline()
-        return ntran
+            pos = self.fo.tell()
 
 # Supposes the first mentionned age is most likely to be the patient's
 # does not cover fully typed out numbers (e.g. 'two-and-a-half-year-old')
@@ -72,8 +78,18 @@ def get_gender(s):
         return 'male'
 
 
-p = Transcript_gen('medical_transcripts.txt')
-s = p.getnext()
-while s != '':
-    print(get_age(s)+ ' ' + get_gender(s))
-    s= p.getnext()
+p = TranscriptGen('medical_transcripts.txt')
+s = p.extract()
+transcript = next(s)
+
+try:
+    while transcript != '':
+        print(get_age(transcript), ' ',  get_gender(transcript))
+        transcript = next(s)
+
+except StopIteration:
+    print('done')
+finally:
+    del p
+    del s
+    del transcript
