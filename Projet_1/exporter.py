@@ -40,7 +40,7 @@ class Exporter:
     def __init__(self, mode):
         self.mode = mode
 
-    def addToTable(self, numb, gender, age, weight, height, bmi, bodyTemp, pulse, breath, bloodP_sys, bloodP_dias, o2sat):
+    def addToTable(self, numb='/', gender='NA', age='NA', weight='NA', height='NA', bmi='NA', bodyTemp='NA', pulse='NA', breath='NA', bloodP_sys='NA', bloodP_dias='NA', o2sat='NA'):
         if self.mode == Exporter.rawmode:
             self.table += str(numb) + '\t' + gender + '\t' + age + '\t' + weight + '\t' + bmi + '\t' + bodyTemp + '\t' +\
                           pulse + '\t' + breath + '\t' + bloodP_sys + '\t' + bloodP_dias + '\t' + o2sat + '\n'

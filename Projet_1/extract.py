@@ -23,6 +23,8 @@ weight = re.compile('weigh[st] [^.]*\d+ (pounds?|kilos?|kg)')
 # creation of the regex's for a number
 number = re.compile('\d+')
 
+#creation of the body temperature regex:
+temp = re.compile('[tT]emperature \d+')
 
 class TranscriptGen:
     def __init__(self, file):
@@ -80,6 +82,14 @@ def get_age(s):
     else:
         return 'NA'
 
+def getTemp(transcript):
+    matches = temp.search(transcript)
+    if matches is None:
+        return 'NA'
+    else:
+        return float(number.search(matches.group()).group())
+
+
 
 def get_gender(s):
     m = male.search(s)
@@ -103,7 +113,8 @@ transcripts = p.extract()
 exp = Exporter(Exporter.finemode)
 i = 1
 for transcript in transcripts:
-    exp.addToTable(str(i), get_gender(transcript), str(get_age(transcript)), 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA')
+
+    exp.addToTable(numb=str(i),  gender=get_gender(transcript), age=str(get_age(transcript)), bodyTemp=str(getTemp(transcript)))
     i += 1
 
 exp.write()
