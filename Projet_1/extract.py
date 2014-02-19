@@ -148,8 +148,8 @@ def getWeight(s):
 	# "arbitrary" minimum weight of 30kg for an adult
 	a = getAge(s)
 	if a != 'NA':
-		a = a>=18
-	else: a = False
+		a = a<18
+	else: a = True
 
 	for re in weight:
 		w = re.search(s)
@@ -159,13 +159,13 @@ def getWeight(s):
 		w = w.group()
 		if pounds.search(w) != None:
 			w=round(float(number.search(w).group())/2.20462, 2)
-			if a and w>30:
+			if a or w>30:
 				return w
 			else:
 				return 'NA'
 		elif kilos.search(s) != None:
 			w=round(float(number.search(w).group()), 2)
-			if a and w>30:
+			if a or w>30:
 				return w
 			else:
 				return 'NA'
