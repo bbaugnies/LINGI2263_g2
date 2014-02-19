@@ -5,6 +5,7 @@ from io import SEEK_END, SEEK_SET
 from exporter import Exporter
 import math
 import re
+import string
 
 re.IGNORECASE = True
 
@@ -14,8 +15,8 @@ days    = re.compile(r'days?')
 weeks   = re.compile(r'weeks?')
 months  = re.compile(r'months?')
 years   = re.compile(r'years?')
-pounds = re.compile('pounds?', re.IGNORECASE)
-kilos = re.compile('kg|kilo(gram)?s?(\s|['+string.punctuation+'])', re.IGNORECASE)
+pounds = re.compile(r'pounds?')
+kilos = re.compile(r'kg|kilo(gram)?s?(\s|['+string.punctuation+'])')
 number  = re.compile(float_string)
 
 
@@ -24,13 +25,13 @@ age     = [re.compile(r' '+float_string+r'[ -](years?)?(months?)?(weeks?)?(days?
            re.compile(float_string+r' y/o '),
            re.compile(float_string+r' (years)?(months)? of age')]
 # gender
-female = re.compile(r'( girl| woman| female| lady| Mrs.| Ms.)(\s|['+string.punctuation+'])', re.IGNORECASE)
-male = re.compile(r'( boy| man| male| Mr.)(\s|['+string.punctuation+'])', re.IGNORECASE)
+female = re.compile(r'( girl| woman| female| lady| Mrs.| Ms.)(\s|['+string.punctuation+'])')
+male = re.compile(r'( boy| man| male| Mr.)(\s|['+string.punctuation+'])')
 
 
 # weight
-weight 	= [re.compile(r'weigh[st] [^.]*\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)', re.IGNORECASE), 
-	   re.compile(r'\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)', re.IGNORECASE)]
+weight 	= [re.compile(r'weigh[st] [^.]*\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)'), 
+	   re.compile(r'\d+[.]?\d* (pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)')]
 
 # temperature
 temp    = re.compile(r'([tT]emperature(:)?(\n)?( )?(\n)?((\w+ ){,5})(\n)?(\d+(\.\d*)?|\.\d))' +
@@ -102,9 +103,9 @@ def getTemp(transcript):
         return 'NA'
     else:
         m = matches.group()
-        print('m', m)
+        #print('m', m)
         t = number.search(m).group()
-        print(t)
+        #print(t)
         t = float(t)
         if t > 45:  # corporal temperature way above lethal one in Celsius!
             return round((t - 32.0) * 5.0/9.0, 2)
@@ -153,7 +154,7 @@ for transcript in transcripts:
     temperature = str(getTemp(transcript))
     if temperature != 'NA':
         TranscriptGen.k +=1
-    exp.addToTable(numb=str(i),  gender=get_gender(transcript), age=str(get_age(transcript)), bodyTemp=temperature)
+    exp.addToTable(numb=str(i),  gender=get_gender(transcript), age=str(get_age(transcript)), weight=str(get_weight(transcript)), bodyTemp=temperature)
     i += 1
-print(TranscriptGen.k)
+#print(TranscriptGen.k)
 exp.write()
