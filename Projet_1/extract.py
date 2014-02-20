@@ -62,6 +62,18 @@ height = [re.compile(r'(height[^.]{,5}|ht([^a]|a){,5})'+length+'|'+
 # BMI
 bmi = re.compile(r"BMI[^.]{,5}"+float_string)
 
+# Oxygen saturation
+o2sat = 'o(2|xygen)\ssat(uration)?'
+o2value = '\d+(-\d+)?%'
+roomair = re.compile('room air[^.]'+o2sat+'[^.]*'+o2value+
+                     '|'+o2sat+'[^.]*room air[^.]*'+o2value+
+                     '|'+o2sat+'[^.]*'+o2value+'[^.]*room air')
+ambulation = re.compile('ambulation[^.]'+o2sat+'[^.]*'+o2value+
+                     '|'+o2sat+'[^.]*ambulation[^.]*'+o2value+
+                     '|'+o2sat+'[^.]*'+o2value+'[^.]*ambulation')
+o2no_con = re.compile(o2sat+'[^.]*'+o2value)
+
+
 # temperature
 temp    = re.compile(r'([tT]emperatures?( )?:?\n?( )?\n?(([a-zA-Z]+ ?){,5}?)?\n?( )?(\d+(\.\d*)?|\.\d))' +
                      r'|' +
@@ -286,6 +298,20 @@ def getBMI(transcript):
                 return 'NA'
         else:
             return 'NA'
+
+            
+#Extract patient O2sat
+def getO2sat(transcript):
+	o = roomair.search(transcript)
+	if o is not None:
+		return (getNumber(o.group()), 'room air')
+	o = ambulation.search(transcript)
+	if o is not None:
+		return (getNumber(o.group()), 'ambulation')
+	o = o2no_con.search(transcript)
+	if o is not None:
+		return (getNumber(o.group()), '(room air)')
+	return ('NA', 'NA')
         
 
 # Extracts patient breathing frequency
@@ -336,6 +362,7 @@ brcount = 0
 wecount = 0
 hecount = 0
 bmcount = 0
+o2count = 0
 for transcript in transcripts:
     bp = str(getBloodP(transcript))
     ge = str(getGender(transcript))
@@ -346,6 +373,9 @@ for transcript in transcripts:
     we = str(getWeight(transcript))
     he = str(getHeight(transcript))
     bm = str(getBMI(transcript))
+    o2 = getO2sat(transcript)
+    o2_cond = o2[1]
+    o2 = str(o2[0])
     if bp != 'NA': bpcount += 1
     if ge != 'NA': gecount += 1
     if ag != 'NA': agcount += 1
@@ -355,8 +385,9 @@ for transcript in transcripts:
     if we != 'NA': wecount += 1
     if he != 'NA': hecount += 1
     if bm != 'NA': bmcount += 1
+    if o2 != 'NA': o2count += 1
     exp.addToTable(numb=str(i),  gender=ge, age=ag, bodyTemp=tp, pulse=pu, breath=br, weight=we, height=he, bmi=bm,
-                   bloodP=bp)
+                   bloodP=bp, o2sat=o2, o2cond=o2_cond)
     i += 1
 
 exp.write()
@@ -372,4 +403,5 @@ print('body temperature\t:',        round(tpcount/i, 2)*100, '%')
 print('pulse\t\t\t:',               round(pucount/i, 2)*100, '%')
 print('breathing frequency\t:',     round(brcount/i, 2)*100, '%')
 print('blood pressure\t\t:',        round(bpcount/i, 2)*100, '%')
+print('oxygen saturation\t\t:',     round(o2count/i, 2)*100, '%')
 print('=======================================================================================================================')
