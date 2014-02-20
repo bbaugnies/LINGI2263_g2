@@ -6,6 +6,8 @@ from exporter import Exporter
 import math
 import re
 import string
+import sys
+import argparse
 
 #---------------------------------------
 # Regular expression definition
@@ -292,10 +294,19 @@ def getBreath(transcript):
 #--------------------------------------------------
 # data extraction
 
-p = TranscriptGen('medical_transcripts.txt')
+parser = argparse.ArgumentParser()
+parser.add_argument('input_file')
+parser.add_argument('output_file')
+parser.add_argument('--fine', dest='mode', action='store_const', const=Exporter.finemode, default=Exporter.rawmode, 
+                    help = 'sends output to output.html for better readability' )
+
+arg = parser.parse_args()
+
+p = TranscriptGen(arg.input_file)
 transcripts = p.extract()
 
-exp = Exporter(Exporter.finemode)
+# default output is rawmode
+exp = Exporter(arg.mode, arg.output_file)
 i = 1
 for transcript in transcripts:
     p = str(getWeight(transcript))
@@ -304,5 +315,4 @@ for transcript in transcripts:
     exp.addToTable(numb=str(i),  gender=getGender(transcript), age=str(getAge(transcript)),
                    bodyTemp=str(getTemp(transcript)), pulse=str(getPulse(transcript)), breath=str(getBreath(transcript)), weight=str(getWeight(transcript)), height=str(getHeight(transcript)), bmi=str(getBMI(transcript)))
     i += 1
-print(TranscriptGen.k)
 exp.write()

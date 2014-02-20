@@ -51,8 +51,9 @@ class Exporter:
     rawmode = 1
     finemode = 0
 
-    def __init__(self, mode):
+    def __init__(self, mode, out):
         self.mode = mode
+        self.file = out
 
     def addToTable(self, numb='/', gender='NA', age='NA', weight='NA', height='NA', bmi='NA', bodyTemp='NA', pulse='NA', breath='NA', bloodP='NA', o2sat='NA'):
 
@@ -99,7 +100,7 @@ class Exporter:
     def write(self):
 
         if self.mode == Exporter.rawmode:
-            self.fo = open('output.txt', 'w', encoding='utf-8')
+            self.fo = open(self.file, 'w', encoding='utf-8')
             self.fo.write(self.rawTableHead+self.table)
         else:
             self.fo = open('output.html', 'w', encoding='utf-8')
