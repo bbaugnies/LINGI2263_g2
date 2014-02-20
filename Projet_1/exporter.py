@@ -1,3 +1,4 @@
+import re
 class Exporter:
     head = """<!DOCTYPE html >
         <html>
@@ -100,9 +101,10 @@ class Exporter:
     def write(self):
 
         if self.mode == Exporter.rawmode:
+            print('output in :', self.file)
             self.fo = open(self.file, 'w', encoding='utf-8')
             self.fo.write(self.rawTableHead+self.table)
         else:
-            self.fo = open('output.html', 'w', encoding='utf-8')
+            self.fo = open(re.search('\w+.', self.file).group()+'html', 'w', encoding='utf-8')
             self.fo.write(self.head + self.tableHead + self.table + self.tableEnd + self.end)
 
