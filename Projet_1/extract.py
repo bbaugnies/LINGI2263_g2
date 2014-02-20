@@ -45,7 +45,7 @@ male = re.compile(r'(\sboy|\sman|\smale|Mr.|gentleman)'+eow)
 
 # weight
 weightexpr = r'\d+[.]?\d*\s(pounds?|kilo(gram)?s?(\s|['+string.punctuation+'])|kg)'
-weight     = [re.compile(r'weigh[st][^.]{,5}'+weightexpr+'|'+
+weight     = [re.compile(r'(weigh[st]|([wW][tT]))[^.]{,5}'+weightexpr+'|'+
                       weightexpr+'[^.]{,5}weight'), 
            re.compile(weightexpr)]
 
@@ -69,14 +69,15 @@ temp    = re.compile(r'([tT]emperatures?( )?:?\n?( )?\n?(([a-zA-Z]+ ?){,5}?)?\n?
                      r'|' +
                      r'(((\d+(\.\d*)?|\.\d) (([a-zA-Z]+ ?){,3}?)?[tT]emperature)(?!((([a-zA-Z]+ ?){,2}?)?\n?( )?(\d+(\.\d*)?|\.\d))))')
 
-pulse   = re.compile(r'([pP]ulses?:?\n?( )?\n?(([a-zA-Z]+ ?){,3}?)?\n?( )?(\d+(\.\d*)?|\.\d))'+
+pulse   = re.compile(r'((([pP]ulses?)|([hH]eart rate)):?\n?( )?\n?(([a-zA-Z]+ ?){,3}?)?\n?( )?(\d+(\.\d*)?|\.\d))'+
                      r'|' +
-                     r'(\bP\b:?\n? (\d+(\.\d*)?|\.\d))')
+                     r'(\b(P|([hH][rR]))\b:?\n? (\d+(\.\d*)?|\.\d))')
 
 breath  = re.compile(r'([rR]espiratory rate\n?( )?\n?:?\n?(([a-zA-Z]+ ?){,3}?)?\n?( )?(\d+(\.\d*)?|\.\d))' +
                      r'|' +
                      r'(\bRR\b:?\n? (\d+(\.\d*)?|\.\d))')
 
+bloodP  = re.compile('((([bB]lood [pP]ressure)|([bB][pP]))( )?:?\n?( )?\n?(([a-zA-Z]+ ?){,3}?)?\n?( )?((\d+(\.\d*)?|\.\d)/(\d+(\.\d*)?|\.\d)))')
 #------------------------------------------------
 # Utility functions/classes
 
@@ -297,6 +298,17 @@ def getBreath(transcript):
         return float(number.search(matches.group()).group())
 
 
+# Extracts patient breathing frequency
+def getBloodP(transcript):
+    matches = bloodP.search(transcript)
+    if matches is None:
+        return 'NA'
+    else:
+        frac = re.search('(\d+/\d+)', matches.group())
+        # individual_numbers = re.findall('(\d+(\.\d*)?|\.\d)', frac.group())
+        return frac.group()
+
+
 
 
 #--------------------------------------------------
@@ -317,11 +329,14 @@ transcripts = p.extract()
 exp = Exporter(arg.mode, arg.output_file)
 i = 1
 for transcript in transcripts:
-    p = str(getTemp(transcript))
+    p = str(getBloodP(transcript))
     if p != 'NA':
         TranscriptGen.k += 1
     exp.addToTable(numb=str(i),  gender=getGender(transcript), age=str(getAge(transcript)),
-                   bodyTemp=str(getTemp(transcript)), pulse=str(getPulse(transcript)), breath=str(getBreath(transcript)), weight=str(getWeight(transcript)), height=str(getHeight(transcript)), bmi=str(getBMI(transcript)))
+                   bodyTemp=str(getTemp(transcript)), pulse=str(getPulse(transcript)),
+                   breath=str(getBreath(transcript)), weight=str(getWeight(transcript)),
+                   height=str(getHeight(transcript)), bmi=str(getBMI(transcript)),
+                   bloodP=getBloodP(transcript))
     i += 1
 print(TranscriptGen.k)
 exp.write()
