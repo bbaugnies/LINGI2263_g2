@@ -16,7 +16,7 @@ class Exporter:
             <body><div class="container"> <div class="row"> <div class="col-xs-12">"""
 
     rawTableHead = 'Transcript number\tGender\tAge\tWeight\tHeight\tBMI\tBody temperature\tPulse\tBreathing frequency' \
-                   '\tBlood pressure (systolic/diastolic)\tOxygen saturation\t\n'
+                   '\tBlood pressure (systolic/diastolic)\tOxygen saturation\tOxygen condition\t\n'
 
     tableHead = """ <div class="table-responsive">
                         <table class="table table-condensed table-hover tablesorter" id="results">
@@ -33,6 +33,7 @@ class Exporter:
                                       <th>Breathing frequency</th>
                                       <th>Blood pressure (systolic/diastolic)</th>
                                       <th>Oxygen saturation</th>
+                                      <th>Oxygen condition</th>
                                   </tr>
                             </thead>
                             <tbody>"""
@@ -56,7 +57,7 @@ class Exporter:
         self.mode = mode
         self.file = out
 
-    def addToTable(self, numb='/', gender='NA', age='NA', weight='NA', height='NA', bmi='NA', bodyTemp='NA', pulse='NA', breath='NA', bloodP='NA', o2sat='NA'):
+    def addToTable(self, numb='/', gender='NA', age='NA', weight='NA', height='NA', bmi='NA', bodyTemp='NA', pulse='NA', breath='NA', bloodP='NA', o2sat='NA', o2cond='NA'):
 
         if age != 'NA':
             c = 0
@@ -80,7 +81,7 @@ class Exporter:
 
         if self.mode == Exporter.rawmode:
             self.table += str(numb) + '\t' + gender + '\t' + age + '\t' + weight + '\t' + bmi + '\t' + bodyTemp + '\t' +\
-                          pulse + '\t' + breath + '\t' + bloodP + '\t' + o2sat + '\n'
+                          pulse + '\t' + breath + '\t' + bloodP + '\t' + o2sat + '\t' + o2cond + '\n'
         else:
             self.table += """
                           <tr>
@@ -95,6 +96,7 @@ class Exporter:
                                   <td>"""+  breath        +"""</td>
                                   <td>"""+  bloodP        +"""</td>
                                   <td>"""+  o2sat         +"""</td>
+                                  <td>"""+  o2cond         +"""</td>
                               </tr>
                           """
 
