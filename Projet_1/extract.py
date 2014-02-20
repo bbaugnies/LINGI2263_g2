@@ -362,7 +362,7 @@ for transcript in transcripts:
 exp.write()
 
 print('=======================================================================================================================')
-print('Hits : ')
+print('Hits : (percentage of transcripts where the information has been found)')
 print('gender\t\t\t:',              round(gecount/i, 2)*100, '%')
 print('age\t\t\t:',                 round(agcount/i, 2)*100, '%')
 print('weight\t\t\t:',              round(wecount/i, 2)*100, '%')
