@@ -159,6 +159,15 @@ The third part of the program contains the methods for extracting each type of d
 \\
 Finally, we end the program applying the methods on each transcript of the file and outputting the obtained values.
 
+\section{Usage}
+The program can be used with two modes: 
+\begin{itemize}
+\item the first mode is the raw mode that outputs the results as a "\textbackslash t" tab-separated table into the output file specified the command is : \\
+\texttt{python3 extract.py \textit{inputFile} \textit{outputFile}}
+\item the second mode is a more readable mode that will output the results as a html table that can be sorted by clicking onto the column names. The generated file have the name given by the user as outputFile and has the extension html. The corresponding command is \\
+\texttt{python3 extract.py \textbf{--fine} \textit{inputFile} \textit{outputFile}}
+\end{itemize}
+
 \section{Data extraction}
 In this section, we will go over how certain attributes are extracted from the corpus. Specifically, we will concentrate on the age, weight, and temperature. However, it is worth noting that other attributes are extremely similar (weight and height, temperature and pulse, for example).
 
