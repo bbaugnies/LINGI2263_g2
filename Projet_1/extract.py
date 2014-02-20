@@ -361,7 +361,7 @@ for transcript in transcripts:
 
 exp.write()
 
-print('=======================================================================================================================')
+print('===============================================================================================================')
 print('Hits : (percentage of transcripts where the information has been found)')
 print('gender\t\t\t:',              round(gecount/i, 2)*100, '%')
 print('age\t\t\t:',                 round(agcount/i, 2)*100, '%')
@@ -372,4 +372,4 @@ print('body temperature\t:',        round(tpcount/i, 2)*100, '%')
 print('pulse\t\t\t:',               round(pucount/i, 2)*100, '%')
 print('breathing frequency\t:',     round(brcount/i, 2)*100, '%')
 print('blood pressure\t\t:',        round(bpcount/i, 2)*100, '%')
-print('=======================================================================================================================')
+print('===============================================================================================================')
