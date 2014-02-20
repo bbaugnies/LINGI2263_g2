@@ -111,7 +111,6 @@ def getNumber(s):
 
 # Allows the extraction of individual transcripts
 class TranscriptGen:
-    k = 0
 
     def __init__(self, file):
         self.fo = open(file, 'r', encoding='utf-16')
@@ -327,16 +326,49 @@ transcripts = p.extract()
 
 # default output is rawmode
 exp = Exporter(arg.mode, arg.output_file)
-i = 1
+i       = 0
+bpcount = 0
+gecount = 0
+agcount = 0
+tpcount = 0
+pucount = 0
+brcount = 0
+wecount = 0
+hecount = 0
+bmcount = 0
 for transcript in transcripts:
-    p = str(getBloodP(transcript))
-    if p != 'NA':
-        TranscriptGen.k += 1
-    exp.addToTable(numb=str(i),  gender=getGender(transcript), age=str(getAge(transcript)),
-                   bodyTemp=str(getTemp(transcript)), pulse=str(getPulse(transcript)),
-                   breath=str(getBreath(transcript)), weight=str(getWeight(transcript)),
-                   height=str(getHeight(transcript)), bmi=str(getBMI(transcript)),
-                   bloodP=getBloodP(transcript))
+    bp = str(getBloodP(transcript))
+    ge = str(getGender(transcript))
+    ag = str(getAge(transcript))
+    tp = str(getTemp(transcript))
+    pu = str(getPulse(transcript))
+    br = str(getBreath(transcript))
+    we = str(getWeight(transcript))
+    he = str(getHeight(transcript))
+    bm = str(getBMI(transcript))
+    if bp != 'NA': bpcount += 1
+    if ge != 'NA': gecount += 1
+    if ag != 'NA': agcount += 1
+    if tp != 'NA': tpcount += 1
+    if pu != 'NA': pucount += 1
+    if br != 'NA': brcount += 1
+    if we != 'NA': wecount += 1
+    if he != 'NA': hecount += 1
+    if bm != 'NA': bmcount += 1
+    exp.addToTable(numb=str(i),  gender=ge, age=ag, bodyTemp=tp, pulse=pu, breath=br, weight=we, height=he, bmi=bm,
+                   bloodP=bp)
     i += 1
-print(TranscriptGen.k)
+
 exp.write()
+
+print('=======================================================================================================================')
+print('Hits : ')
+print('gender\t\t\t:',              round(gecount/i, 2)*100, '%')
+print('age\t\t\t:',                 round(agcount/i, 2)*100, '%')
+print('weight\t\t\t:',              round(wecount/i, 2)*100, '%')
+print('height\t\t\t:',              round(hecount/i, 2)*100, '%')
+print('bmi\t\t\t:',                 round(bmcount/i, 2)*100, '%')
+print('body temperature\t:',        round(tpcount/i, 2)*100, '%')
+print('pulse\t\t\t:',               round(pucount/i, 2)*100, '%')
+print('breathing frequency\t:',     round(brcount/i, 2)*100, '%')
+print('blood pressure\t\t:',        round(bpcount/i, 2)*100, '%')
