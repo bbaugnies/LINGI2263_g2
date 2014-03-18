@@ -6,10 +6,10 @@ from tags_and_words_statistics import CorpusParser
 
 parser = CorpusParser()
 
-parser.parseFile()
+parser.parse_file()
 
-fWords = parser.getMostFrequent(5)
+parser.build_lexicon()
 
-print(fWords)
+parser.lexiconize_files()
 
-parser.closeParser()
+parser.close_parser()
