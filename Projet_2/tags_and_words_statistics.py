@@ -90,12 +90,17 @@ class CorpusParser:
 		now = datetime.now()
 		lexicon = set(self.lexicon)  # because set lookup is really more efficient (10x faster! and the lexicon is a set anyway)
 		legit_tags = set(self.tags)
-
+		number_of_segments = 0
+		number_of_tokens = 0
+		tokens = set()
 		# remove any word from the training file that is not in the lexicon
 		lexiconized_file = open('lexiconized_brown_train', 'w')
 		for segment in self.file:
+			number_of_segments += 1
 			segment = segment.rstrip('\n')
 			for token in segment.split(' '):        # split the line into the different tokens
+				tokens.add(token)
+				number_of_tokens += 1
 				[word, tag] = token.rsplit('/', 1)  # split the WORD/TAG token by splitting at the last occurence of '/'
 
 				if word in lexicon:
@@ -104,28 +109,43 @@ class CorpusParser:
 					lexiconized_file.write('<UNK>/'+tag+' ' if tag != '.' else '<UNK>/'+tag)
 			lexiconized_file.write('\n')
 		lexiconized_file.close()
+		print('\tnumber of types in train file = ' + str(len(tokens)))
+		print('\tnumber of tokens in train file = ' + str(number_of_tokens))
+		print('\tnumber of segments in train file = ' + str(number_of_segments))
+
 
 		# do the same for the test file:
 		lexiconized_file = open('lexiconized_brown_test', 'w')
 		test_file = open('brown_test', 'r')
+		number_of_segments = 0
+		number_of_tokens = 0
+		tokens = set()
+
 		for segment in test_file:
+			number_of_segments += 1
 			segment = segment.rstrip('\n')
 			for token in segment.split(' '):        # split the line into the different tokens
 				[word, tag] = token.rsplit('/', 1)  # split the WORD/TAG token by splitting at the last occurence of '/'
-
+				number_of_tokens += 1
 				if word in lexicon:
 					if tag is legit_tags:
 						lexiconized_file.write(token + ' ' if tag != '.' else token + '')
+						tokens.add(token)
 					else:
 						lexiconized_file.write(word+'/<UNK> ' if tag != '.' else word+'/<UNK>')
+						tokens.add(word+'/<UNK>')
 				else:
 					if tag is legit_tags:
 						lexiconized_file.write('<UNK>/'+tag+' ' if tag != '.' else '<UNK>/'+tag)
+						tokens.add('<UNK>/'+tag)
 					else:
 						lexiconized_file.write('<UNK>/<UNK> ' if tag != '.' else '<UNK>/<UNK>')
+						tokens.add('<UNK>/<UNK>')
 			lexiconized_file.write('\n')
 		lexiconized_file.close()
-
+		print('\n\tnumber of types in test file = ' + str(len(tokens)))
+		print('\tnumber of tokens in test file = ' + str(number_of_tokens))
+		print('\tnumber of segments in test file = '+ str(number_of_segments))
 		print('elapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
 
 	def close_parser(self):
