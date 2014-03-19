@@ -4,24 +4,27 @@
 # tags passed in arguments.
 
 __author__ = """ Martin Crochelet And Benjamin Baugnies """
-from heapq import heappush, heappop, heapify
 from datetime import datetime
+
 
 class CorpusParser:
 
 	def __init__(self):
 		self.word_frequencies = {}
+		self.tag_frequencies = {}
+
 		self.file = open('brown_train', 'r')
-		self.word_heap = []
+
 		self.frequent_words = []
+		self.frequent_tags = []
 		self.lexicon = []
+		self.tags = []
 
 	def parse_file(self):
 		print('-------------------------------------------------------------------------------------------------------')
 		print('  Parsing the file training file: brown_train')
 		print('-------------------------------------------------------------------------------------------------------')
 		now = datetime.now()
-		heapify(self.word_heap)
 
 		for segment in self.file:
 			segment = segment.rstrip('\n')
@@ -40,8 +43,10 @@ class CorpusParser:
 
 				self.word_frequencies[word]['count'] += 1
 
-		for word in self.word_frequencies.keys():
-			heappush(self.word_heap, (-self.word_frequencies[word]['count'], word))
+				if tag not in self.tag_frequencies.keys():
+					self.tag_frequencies[tag] = 0
+				else:
+					self.tag_frequencies[tag] += 1
 
 		self.file.seek(0)
 		print('elapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
@@ -49,13 +54,19 @@ class CorpusParser:
 	def get_most_frequent(self, n=5000):
 		if not self.frequent_words:
 			# find the n largest elements
-			for i in range(n):
-				self.frequent_words.append(heappop(self.word_heap))
-			# restore the heap state
-			for tup in self.frequent_words:
-				heappush(self.word_heap, tup)
+			for word in self.word_frequencies.keys():
+				self.frequent_words.append((self.word_frequencies[word]['count'], word))
 
+			self.frequent_words = sorted(self.frequent_words, key=lambda w: w[0])[-n:]
 		return self.frequent_words
+
+	def sort_tags(self):
+		if not self.tags:
+			for tag in self.tag_frequencies.keys():
+				self.frequent_tags.append((self.tag_frequencies[tag], tag))
+
+			self.tags = sorted(self.frequent_words, key=lambda w: w[0])
+		return self.tags
 
 	def build_lexicon(self, n=5000):
 		print('-------------------------------------------------------------------------------------------------------')
@@ -63,8 +74,7 @@ class CorpusParser:
 		print('-------------------------------------------------------------------------------------------------------')
 		now = datetime.now()
 		if not self.lexicon:
-			# because set lookup is really more efficient (10x faster! and the lexicon is a set anyway)
-			self.lexicon = set([word[1] for word in self.get_most_frequent(n)])
+			self.lexicon = [word[1] for word in self.get_most_frequent(n)]
 		print('elapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
 		return self.lexicon
 
@@ -73,6 +83,7 @@ class CorpusParser:
 		print('  Trim the train and test files from the unknown words (that does not belong to the lexicon)')
 		print('-------------------------------------------------------------------------------------------------------')
 		now = datetime.now()
+		lexicon = set(self.lexicon)  # because set lookup is really more efficient (10x faster! and the lexicon is a set anyway)
 
 		# remove any word from the training file that is not in the lexicon
 		lexiconized_file = open('lexiconized_brown_train', 'w')
@@ -81,7 +92,7 @@ class CorpusParser:
 			for token in segment.split(' '):        # split the line into the different tokens
 				[word, tag] = token.rsplit('/', 1)  # split the WORD/TAG token by splitting at the last occurence of '/'
 
-				if word in self.lexicon:
+				if word in lexicon:
 					lexiconized_file.write(token+' ' if tag != '.' else token+'')
 				else:
 					lexiconized_file.write('<UNK>/<UNK>'+' ' if tag != '.' else '<UNK>/<UNK>')
@@ -96,7 +107,7 @@ class CorpusParser:
 			for token in segment.split(' '):        # split the line into the different tokens
 				[word, tag] = token.rsplit('/', 1)  # split the WORD/TAG token by splitting at the last occurence of '/'
 
-				if word in self.lexicon:
+				if word in lexicon:
 					lexiconized_file.write(token + ' ' if tag != '.' else token + '')
 				else:
 					lexiconized_file.write('<UNK>/<UNK>' + ' ' if tag != '.' else '<UNK>/<UNK>')
