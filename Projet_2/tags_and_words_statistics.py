@@ -45,8 +45,8 @@ class CorpusParser:
 
 				if tag not in self.tag_frequencies.keys():
 					self.tag_frequencies[tag] = 0
-				else:
-					self.tag_frequencies[tag] += 1
+
+				self.tag_frequencies[tag] += 1
 
 		self.file.seek(0)
 		print('elapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
@@ -61,11 +61,16 @@ class CorpusParser:
 		return self.frequent_words
 
 	def sort_tags(self):
+		print('-------------------------------------------------------------------------------------------------------')
+		print('  Sorting the tags from the in ram data structure')
+		print('-------------------------------------------------------------------------------------------------------')
+		now = datetime.now()
 		if not self.tags:
 			for tag in self.tag_frequencies.keys():
 				self.frequent_tags.append((self.tag_frequencies[tag], tag))
 
-			self.tags = sorted(self.frequent_words, key=lambda w: w[0])
+			self.tags = sorted(self.frequent_tags, key=lambda t: t[0])
+		print('elapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
 		return self.tags
 
 	def build_lexicon(self, n=5000):
@@ -84,6 +89,7 @@ class CorpusParser:
 		print('-------------------------------------------------------------------------------------------------------')
 		now = datetime.now()
 		lexicon = set(self.lexicon)  # because set lookup is really more efficient (10x faster! and the lexicon is a set anyway)
+		legit_tags = set(self.tags)
 
 		# remove any word from the training file that is not in the lexicon
 		lexiconized_file = open('lexiconized_brown_train', 'w')
@@ -95,7 +101,7 @@ class CorpusParser:
 				if word in lexicon:
 					lexiconized_file.write(token+' ' if tag != '.' else token+'')
 				else:
-					lexiconized_file.write('<UNK>/<UNK>'+' ' if tag != '.' else '<UNK>/<UNK>')
+					lexiconized_file.write('<UNK>/'+tag+' ' if tag != '.' else '<UNK>/'+tag)
 			lexiconized_file.write('\n')
 		lexiconized_file.close()
 
@@ -108,9 +114,15 @@ class CorpusParser:
 				[word, tag] = token.rsplit('/', 1)  # split the WORD/TAG token by splitting at the last occurence of '/'
 
 				if word in lexicon:
-					lexiconized_file.write(token + ' ' if tag != '.' else token + '')
+					if tag is legit_tags:
+						lexiconized_file.write(token + ' ' if tag != '.' else token + '')
+					else:
+						lexiconized_file.write(word+'/<UNK> ' if tag != '.' else word+'/<UNK>')
 				else:
-					lexiconized_file.write('<UNK>/<UNK>' + ' ' if tag != '.' else '<UNK>/<UNK>')
+					if tag is legit_tags:
+						lexiconized_file.write('<UNK>/'+tag+' ' if tag != '.' else '<UNK>/'+tag)
+					else:
+						lexiconized_file.write('<UNK>/<UNK> ' if tag != '.' else '<UNK>/<UNK>')
 			lexiconized_file.write('\n')
 		lexiconized_file.close()
 

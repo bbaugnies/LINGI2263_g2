@@ -8,11 +8,16 @@ parser = CorpusParser()
 
 parser.parse_file()
 
-a=parser.build_lexicon()
+parser.build_lexicon()
+
+print('\nThe 10 most frequent "words" in the train file are: (in order) \n', [word[1] for word in parser.frequent_words[-10:]], '\n')
 
 parser.lexiconize_files()
 
-parser.report_words_tags(10)
+parser.sort_tags()
+
+print('\nThe 10 most frequent "tags" in the train file are: (in order) \n', parser.tags[-10:], '\n')
+print('\nThe 20 least frequent "tags" in the train file are: (in order) \n', parser.tags[:20], '\n')
 
 parser.close_parser()
 
