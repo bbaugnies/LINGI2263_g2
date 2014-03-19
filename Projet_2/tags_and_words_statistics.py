@@ -117,6 +117,7 @@ class CorpusParser:
 		# do the same for the test file:
 		lexiconized_file = open('lexiconized_brown_test', 'w')
 		test_file = open('brown_test', 'r')
+		no_tag_file = open('no_tag_brown_test', 'w')
 		number_of_segments = 0
 		number_of_tokens = 0
 		tokens = set()
@@ -134,6 +135,7 @@ class CorpusParser:
 					else:
 						lexiconized_file.write(word+'/<UNK> ' if tag != '.' else word+'/<UNK>')
 						tokens.add(word+'/<UNK>')
+					no_tag_file.write(word + ' ' if tag != '.' else word + '')
 				else:
 					if tag is legit_tags:
 						lexiconized_file.write('<UNK>/'+tag+' ' if tag != '.' else '<UNK>/'+tag)
@@ -141,6 +143,10 @@ class CorpusParser:
 					else:
 						lexiconized_file.write('<UNK>/<UNK> ' if tag != '.' else '<UNK>/<UNK>')
 						tokens.add('<UNK>/<UNK>')
+					no_tag_file.write('<UNK>' + ' ' if tag != '.' else '<UNK>')
+
+
+			no_tag_file.write('\n')		
 			lexiconized_file.write('\n')
 		lexiconized_file.close()
 		print('\n\tnumber of types in test file = ' + str(len(tokens)))
