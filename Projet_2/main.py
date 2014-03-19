@@ -8,8 +8,12 @@ parser = CorpusParser()
 
 parser.parse_file()
 
-parser.build_lexicon()
+a=parser.build_lexicon()
 
 parser.lexiconize_files()
 
+parser.report_words_tags(10)
+
 parser.close_parser()
+
+
