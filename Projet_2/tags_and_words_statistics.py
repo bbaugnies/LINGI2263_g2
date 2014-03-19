@@ -11,8 +11,10 @@ class CorpusParser:
 
 	def __init__(self):
 		self.word_frequencies = {}
+		self.tag_frequencies = {}
 		self.file = open('brown_train', 'r')
 		self.word_heap = []
+		self.tag_heap= []
 		self.frequent_words = []
 		self.lexicon = []
 
@@ -22,6 +24,7 @@ class CorpusParser:
 		print('-------------------------------------------------------------------------------------------------------')
 		now = datetime.now()
 		heapify(self.word_heap)
+		heapify(self.tag_heap)
 
 		for segment in self.file:
 			segment = segment.rstrip('\n')
@@ -39,9 +42,20 @@ class CorpusParser:
 					self.word_frequencies[word][tag] += 1
 
 				self.word_frequencies[word]['count'] += 1
+		
+				# update tag dictionary
+				if tag not in self.tag_frequencies.keys():
+					self.tag_frequencies[tag] = {}
+					self.tag_frequencies[tag]['count'] = 1
+				else:
+					self.tag_frequencies[tag]['count'] += 1
+
 
 		for word in self.word_frequencies.keys():
 			heappush(self.word_heap, (-self.word_frequencies[word]['count'], word))
+
+		for tag in self.tag_frequencies.keys():
+			heappush(self.tag_heap, (-self.tag_frequencies[tag]['count'], tag))
 
 		self.file.seek(0)
 		print('elapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
@@ -56,6 +70,24 @@ class CorpusParser:
 				heappush(self.word_heap, tup)
 
 		return self.frequent_words
+
+	def report_words_tags(self, n):
+		tags=[]
+		words=[]
+		for i in range(n):
+			tags.append(heappop(self.tag_heap))
+			words.append(heappop(self.word_heap))
+		for t in tags:
+			heappush(self.tag_heap, t)
+		for w in words:
+			heappush(self.word_heap, w)
+
+		print("Most common words :\n")
+		print(words)
+		print("Most common tags :\n")
+		print(tags)
+
+		
 
 	def build_lexicon(self, n=5000):
 		print('-------------------------------------------------------------------------------------------------------')
