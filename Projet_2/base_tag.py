@@ -32,6 +32,14 @@ print(parser.word_frequencies['THROUGH'])
 best_tags = parser.find_best_tag()
 best_tags_keys = set(best_tags.keys())
 
+tpw= 0
+count = 0
+for t in parser.word_frequencies:
+	if len(parser.word_frequencies[t]) > 1:
+		tpw += len(parser.word_frequencies[t])
+		count += 1
+print(tpw/count)
+
 
 
 i_file= open('no_tag_brown_test', 'r')
