@@ -47,7 +47,7 @@ print('Average error rate per tag: ', avg_error_rate)
 
 jjs = tags['JJS']
 jjs_count = jjs['correct'] + jjs['wrong']
-print('JJS accuracy: ', jjs['correct']/jjs_count)
+print('JJS accuracy: ', jjs['correct']/jjs_count,' ', jjs_count)
 del jjs['correct']
 del jjs['wrong']
 errors=[]
@@ -60,7 +60,7 @@ for e in errors[-2:]:
 
 jjs = tags['NP']
 jjs_count = jjs['correct'] + jjs['wrong']
-print('NP accuracy: ', jjs['correct']/jjs_count)
+print('NP accuracy: ', jjs['correct']/jjs_count, ' ', jjs_count)
 del jjs['correct']
 del jjs['wrong']
 errors=[]
