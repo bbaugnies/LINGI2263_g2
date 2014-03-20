@@ -49,7 +49,7 @@ class CorpusParser:
 				self.tag_frequencies[tag] += 1
 
 		self.file.seek(0)
-		print('elapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
+		print('\telapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
 
 	def get_most_frequent(self, n=5000):
 		if not self.frequent_words:
@@ -70,7 +70,7 @@ class CorpusParser:
 				self.frequent_tags.append((self.tag_frequencies[tag], tag))
 
 			self.tags = sorted(self.frequent_tags, key=lambda t: t[0])
-		print('elapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
+		print('\telapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
 		return self.tags
 
 	def build_lexicon(self, n=5000):
@@ -80,7 +80,7 @@ class CorpusParser:
 		now = datetime.now()
 		if not self.lexicon:
 			self.lexicon = [word[1] for word in self.get_most_frequent(n)]
-		print('elapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
+		print('\telapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
 		return self.lexicon
 
 	def lexiconize_files(self):
@@ -89,7 +89,8 @@ class CorpusParser:
 		print('-------------------------------------------------------------------------------------------------------')
 		now = datetime.now()
 		lexicon = set(self.lexicon)  # because set lookup is really more efficient (10x faster! and the lexicon is a set anyway)
-		legit_tags = set(self.tags)
+		legit_tags = set(tag[1] for tag in self.tags)
+		print(legit_tags)
 		number_of_segments = 0
 		number_of_tokens = 0
 		tokens = set()
@@ -146,7 +147,7 @@ class CorpusParser:
 		print('\n\tnumber of types in test file = ' + str(len(tokens)))
 		print('\tnumber of tokens in test file = ' + str(number_of_tokens))
 		print('\tnumber of segments in test file = '+ str(number_of_segments))
-		print('elapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
+		print('\telapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
 
 	def close_parser(self):
 		self.file.close()
