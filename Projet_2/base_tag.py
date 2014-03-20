@@ -25,6 +25,9 @@ parser.parse_file()
 #lexicon = parser.build_lexicon()
 parser.word_frequencies['<UNK>']={'count':1, '<UNK>':1}
 
+print('Stats for "THROUGH": ')
+print(parser.word_frequencies['THROUGH'])
+
 best_tags = parser.find_best_tag()
 
 
@@ -33,7 +36,6 @@ o_file= open('base_tag_brown_test', 'w')
 index = 0
 for segment in i_file:
 	index += 1
-	print(index)
 	segment = segment.rstrip('\n')
 	for token in segment.split(' '): 
 		if token != '' :
@@ -43,5 +45,19 @@ for segment in i_file:
 o_file.close()
 i_file.close()
 
- 
-		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
