@@ -23,6 +23,7 @@ parser = CorpusParser()
 
 parser.parse_file()
 #lexicon = parser.build_lexicon()
+print('Number of tags: ', len(parser.tag_frequencies))
 parser.word_frequencies['<UNK>']={'count':1, '<UNK>':1}
 
 print('Stats for "THROUGH": ')
