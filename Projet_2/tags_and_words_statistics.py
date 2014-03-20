@@ -20,6 +20,10 @@ class CorpusParser:
 		self.lexicon = []
 		self.tags = []
 
+		self.transitivity_matrix = {}
+		self.emitivity_matrix = {}
+		self.epsilon = 0.001
+
 	def find_best_tag(self):
 		best_tags = {}
 		for word in self.word_frequencies:
@@ -33,6 +37,70 @@ class CorpusParser:
 			best_tags[word]=best
 		return best_tags
 
+	def build_HMM_matrixes(self):
+		for tag in self.tag_frequencies.keys():
+			for previous_tags in self.transitivity_matrix[tag].keys():
+				self.transitivity_matrix[tag][previous_tags] = self.transitivity_matrix[tag][previous_tags] / self.tag_frequencies[tag]
+		for word in self.lexicon:
+			self.emitivity_matrix[word] = {}
+			for tag in self.word_frequencies[word].keys():
+				if tag != 'count':
+					self.emitivity_matrix[word][tag] = self.word_frequencies[word][tag] / self.word_frequencies[word]['count']
+
+		s = set(self.lexicon)
+		self.emitivity_matrix['<UNK>'] = {}
+		for word in self.word_frequencies.keys():
+			if word not in s:
+				for tag in self.word_frequencies[word].keys():
+					if tag not in self.emitivity_matrix['<UNK>'].keys():
+						self.emitivity_matrix['<UNK>'][tag] = 1
+					else:
+						self.emitivity_matrix['<UNK>'][tag] += 1
+
+
+	def HMM_tag_file(self):
+		file = open('no_tag_brown_test', 'r')
+		out = open('HMM_tag_brown_test', 'w')
+
+		for segment in file:
+			segment = segment.rstrip('\n')
+			word_sequence = segment.split(' ')
+			tag_sequence = self.dfs_search(word_sequence)
+			break
+			for word, tag in zip(word_sequence, tag_sequence):
+				out.write(word+'/'+tag+' ' if word != '.' else word+'/'+tag)
+
+	def dfs_search(self, word_sequence):
+		stack = []
+		stack.append('<s>')
+
+		def rec(wseq, stack):
+
+			print(wseq[0])
+			for tag in self.emitivity_matrix[wseq[0]]:
+				stack.append(tag)
+				rec(wseq[1:], stack)
+			if len(wseq) == 0:
+				val = self.evaluate_seq(stack, word_sequence)
+				stack.pop()
+				return val
+
+		rec(word_sequence, stack)
+
+	def evaluate_seq(self, seq, wseq):
+		res = 1
+		i = 1
+		for word in wseq:
+			if seq[i] not in self.emitivity_matrix[word].keys():
+				return self.epsilon * self.epsilon
+			if seq[i-1] not in self.transitivity_matrix[seq[i]].keys():
+				res *= self.emitivity_matrix[word][seq[i]] * self.epsilon
+			else:
+				res *= self.emitivity_matrix[word][seq[i]] * self.transitivity_matrix[seq[i]][seq[i-1]]
+			i += 1
+		print(wseq, seq, res)
+		return res
+
 	def parse_file(self):
 		print('-------------------------------------------------------------------------------------------------------')
 		print('  Parsing the file training file: brown_train')
@@ -41,8 +109,19 @@ class CorpusParser:
 
 		for segment in self.file:
 			segment = segment.rstrip('\n')
+			last_tag = '<s>'  # beginning of segment tag
 			for token in segment.split(' '):        # split the line into the different tokens
 				[word, tag] = token.rsplit('/', 1)  # split the WORD/TAG token by splitting at the last occurence of '/'
+
+				if tag not in self.transitivity_matrix.keys():
+					self.transitivity_matrix[tag] = {}
+					self.transitivity_matrix[tag][last_tag] = 1
+				elif last_tag not in self.transitivity_matrix[tag].keys():
+					self.transitivity_matrix[tag][last_tag] = 1
+				else:
+					self.transitivity_matrix[tag][last_tag] += 1
+
+				last_tag = tag
 
 				# update the dictionary containing the counts for the current word
 				if word not in self.word_frequencies.keys():

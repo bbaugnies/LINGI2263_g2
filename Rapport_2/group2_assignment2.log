@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.9.23)  20 MAR 2014 08:44
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.9.23)  20 MAR 2014 11:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -578,14 +578,14 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 52.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 52.
-<./Figures/logoingisbleu.jpg, id=8, 682.55pt x 903.375pt>
+<./Figures/logoingisbleu.jpg, id=16, 682.55pt x 903.375pt>
 File: ./Figures/logoingisbleu.jpg Graphic file (type jpg)
 
 <use ./Figures/logoingisbleu.jpg>
 Package pdftex.def Info: ./Figures/logoingisbleu.jpg used on input line 56.
 (pdftex.def)             Requested size: 68.25899pt x 90.34279pt.
 
-<./Figures/epl.jpg, id=9, 205.76875pt x 126.4725pt>
+<./Figures/epl.jpg, id=17, 205.76875pt x 126.4725pt>
 File: ./Figures/epl.jpg Graphic file (type jpg)
  <use ./Figures/epl.jpg>
 Package pdftex.def Info: ./Figures/epl.jpg used on input line 63.
@@ -602,37 +602,37 @@ es/logoingisbleu.jpg> <./Figures/epl.jpg>]pdfTeX warning (ext4): destination wi
 th the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.222 
+l.203 
        [1pdfTeX warning (ext4): destination with the same identifier (name{tabl
 e.1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.222 
+l.203 
       pdfTeX warning (ext4): destination with the same identifier (name{table.2
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.222 
-      ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 259.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 259.
+l.203 
+      ] [2]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 266.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 266.
  (./group2_assignment2.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 259.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 259.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 266.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 266.
 Package rerunfilecheck Info: File `group2_assignment2.out' has not changed.
-(rerunfilecheck)             Checksum: A92F4F22A8EB98E2134E427D7F20BE49;60.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 259.
+(rerunfilecheck)             Checksum: D42792C6381C05CCD1B14D36AE9F0011;165.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 266.
  ) 
 Here is how much of TeX's memory you used:
- 7056 strings out of 493315
- 103131 string characters out of 6137904
- 203626 words of memory out of 5000000
- 10433 multiletter control sequences out of 15000+600000
+ 7061 strings out of 493315
+ 103177 string characters out of 6137904
+ 205627 words of memory out of 5000000
+ 10435 multiletter control sequences out of 15000+600000
  5959 words of font info for 22 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 30i,13n,43p,451b,403s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 30i,13n,43p,768b,403s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb
 ></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><
@@ -640,10 +640,10 @@ Here is how much of TeX's memory you used:
 sr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr
 /local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/
 local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on group2_assignment2.pdf (2 pages, 184926 bytes).
+Output written on group2_assignment2.pdf (3 pages, 187920 bytes).
 PDF statistics:
- 55 PDF objects out of 1000 (max. 8388607)
- 41 compressed objects within 1 object stream
- 5 named destinations out of 1000 (max. 500000)
- 19 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 69 PDF objects out of 1000 (max. 8388607)
+ 54 compressed objects within 1 object stream
+ 8 named destinations out of 1000 (max. 500000)
+ 35 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -197,6 +197,10 @@ We can see that the most rarely seen tags are almost all compound tags. Moreover
 \section{Tags and words statistics}
 \section{HMM Tagger}
 
+This last part has been more difficult than foreseen: indeed, we have been able to compute the emission and transition matrix from the training set however, computing the whole set of possible states for a given segment has been quite a challenge. In the joined code, you can see that the whole HMM POS-tagger has been implemented less this challenging part. We expect the tagger to be a lot more slower than the baseline one since it has to access the matrix for each possible state which is a lot more complex than the normal, baseline, version. Moreover, our choice of smoothing is a little bit unorthodox since we simple use a default epsilon value; a better implementation would follow the formula given at slide 18 of the fifth lecture. 
+
+About the evaluation of the tagger, we have obviously not been able to execute it however, the implementation is given in the python file compare.py. 
+
 %\mainmatter % Begin numeric (1,2,3...) page numbering
 
 \pagestyle{fancy} % Return the page headers back to the "fancy" style
