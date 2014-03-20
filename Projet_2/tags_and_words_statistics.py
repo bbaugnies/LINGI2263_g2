@@ -20,6 +20,19 @@ class CorpusParser:
 		self.lexicon = []
 		self.tags = []
 
+	def find_best_tag(self):
+		best_tags = {}
+		for word in self.word_frequencies:
+			count = 0
+			best = ''
+			del self.word_frequencies[word]['count']
+			for t in self.word_frequencies[word]:
+				if self.word_frequencies[word][t] > count:
+					count = self.word_frequencies[word][t]
+					best = t
+			best_tags[word]=best
+		return best_tags
+
 	def parse_file(self):
 		print('-------------------------------------------------------------------------------------------------------')
 		print('  Parsing the file training file: brown_train')
@@ -52,12 +65,19 @@ class CorpusParser:
 		print('\telapsed time = ' + str((datetime.now() - now).total_seconds()) + ' s')
 
 	def get_most_frequent(self, n=5000):
+		unique= 0 
+		ucount = 0
 		if not self.frequent_words:
 			# find the n largest elements
 			for word in self.word_frequencies.keys():
 				self.frequent_words.append((self.word_frequencies[word]['count'], word))
+				if len(self.word_frequencies[word]) == 2:
+					unique += 1
+					ucount += self.word_frequencies[word]['count']
 
 			self.frequent_words = sorted(self.frequent_words, key=lambda w: w[0])[-n:]
+		print('Number of uniquely tagged words: ', unique)
+		print('Occurences of uniquely tagged words: ', ucount)
 		return self.frequent_words
 
 	def sort_tags(self):
@@ -90,7 +110,6 @@ class CorpusParser:
 		now = datetime.now()
 		lexicon = set(self.lexicon)  # because set lookup is really more efficient (10x faster! and the lexicon is a set anyway)
 		legit_tags = set(tag[1] for tag in self.tags)
-		print(legit_tags)
 		number_of_segments = 0
 		number_of_tokens = 0
 		tokens = set()
@@ -118,6 +137,7 @@ class CorpusParser:
 		# do the same for the test file:
 		lexiconized_file = open('lexiconized_brown_test', 'w')
 		test_file = open('brown_test', 'r')
+		#no_tag_file = open('no_tag_brown_test', 'w')
 		number_of_segments = 0
 		number_of_tokens = 0
 		tokens = set()
@@ -129,19 +149,24 @@ class CorpusParser:
 				[word, tag] = token.rsplit('/', 1)  # split the WORD/TAG token by splitting at the last occurence of '/'
 				number_of_tokens += 1
 				if word in lexicon:
-					if tag is legit_tags:
-						lexiconized_file.write(token + ' ' if tag != '.' else token + '')
+					if tag in legit_tags:
+						lexiconized_file.write(token + ' ' if tag != '.' else token + ' ')
 						tokens.add(token)
 					else:
 						lexiconized_file.write(word+'/<UNK> ' if tag != '.' else word+'/<UNK>')
 						tokens.add(word+'/<UNK>')
+					#no_tag_file.write(word + ' ')#if tag != '.' else word + '')
 				else:
-					if tag is legit_tags:
-						lexiconized_file.write('<UNK>/'+tag+' ' if tag != '.' else '<UNK>/'+tag)
+					if tag in legit_tags:
+						lexiconized_file.write('<UNK>/<UNK> ' if tag != '.' else '<UNK>/<UNK> ')
 						tokens.add('<UNK>/'+tag)
 					else:
 						lexiconized_file.write('<UNK>/<UNK> ' if tag != '.' else '<UNK>/<UNK>')
 						tokens.add('<UNK>/<UNK>')
+					#no_tag_file.write('<UNK>' + ' ' )#if tag != '.' else '<UNK>')
+
+
+			#no_tag_file.write('\n')
 			lexiconized_file.write('\n')
 		lexiconized_file.close()
 		print('\n\tnumber of types in test file = ' + str(len(tokens)))
