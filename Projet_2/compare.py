@@ -1,3 +1,4 @@
+#!/usr/local/bin/python3
 true_file = open('lexiconized_brown_test', 'r')
 tag_file = open('base_tag_brown_test', 'r')
 

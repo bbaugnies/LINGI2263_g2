@@ -124,9 +124,9 @@ class CorpusParser:
 				[word, tag] = token.rsplit('/', 1)  # split the WORD/TAG token by splitting at the last occurence of '/'
 
 				if word in lexicon:
-					lexiconized_file.write(token+' ' if tag != '.' else token+'')
+					lexiconized_file.write(token+' ' if word != '.' else token+'')
 				else:
-					lexiconized_file.write('<UNK>/'+tag+' ' if tag != '.' else '<UNK>/'+tag)
+					lexiconized_file.write('<UNK>/'+tag+' ' if word != '.' else '<UNK>/'+tag)
 			lexiconized_file.write('\n')
 		lexiconized_file.close()
 		print('\tnumber of types in train file = ' + str(len(tokens)))
@@ -150,18 +150,18 @@ class CorpusParser:
 				number_of_tokens += 1
 				if word in lexicon:
 					if tag in legit_tags:
-						lexiconized_file.write(token + ' ' if tag != '.' else token + ' ')
+						lexiconized_file.write(token + ' ' if word != '.' else token + ' ')
 						tokens.add(token)
 					else:
-						lexiconized_file.write(word+'/<UNK> ' if tag != '.' else word+'/<UNK>')
+						lexiconized_file.write(word+'/<UNK> ' if word != '.' else word+'/<UNK>')
 						tokens.add(word+'/<UNK>')
 					#no_tag_file.write(word + ' ')#if tag != '.' else word + '')
 				else:
 					if tag in legit_tags:
-						lexiconized_file.write('<UNK>/<UNK> ' if tag != '.' else '<UNK>/<UNK> ')
+						lexiconized_file.write('<UNK>/<UNK> ' if word != '.' else '<UNK>/<UNK> ')
 						tokens.add('<UNK>/'+tag)
 					else:
-						lexiconized_file.write('<UNK>/<UNK> ' if tag != '.' else '<UNK>/<UNK>')
+						lexiconized_file.write('<UNK>/<UNK> ' if word != '.' else '<UNK>/<UNK>')
 						tokens.add('<UNK>/<UNK>')
 					#no_tag_file.write('<UNK>' + ' ' )#if tag != '.' else '<UNK>')
 

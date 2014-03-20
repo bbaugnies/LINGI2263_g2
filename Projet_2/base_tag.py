@@ -30,6 +30,8 @@ print('Stats for "THROUGH": ')
 print(parser.word_frequencies['THROUGH'])
 
 best_tags = parser.find_best_tag()
+best_tags_keys = set(best_tags.keys())
+
 
 
 i_file= open('no_tag_brown_test', 'r')
@@ -39,7 +41,7 @@ for segment in i_file:
 	index += 1
 	segment = segment.rstrip('\n')
 	for token in segment.split(' '): 
-		if token != '' :
+		if token in best_tags:
 			o_file.write(token+'/'+best_tags[token]+' ')
 	o_file.write('\n')
 
