@@ -1,0 +1,293 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[10pt, a4paper, oneside]{article} % Paper size, default font size and one-sided paper
+
+\usepackage{nomencl}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{epstopdf}
+\usepackage[final]{pdfpages}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[square, numbers, comma, sort&compress]{natbib} 
+%\makenomenclature
+\renewcommand{\nomname}{Time Zones}
+\newcommand{\solidareit}{\textsc{s}olidare-\textsc{it} }
+\title{\ttitle} % Defines the thesis title - don't touch this
+
+\begin{document}
+%\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\setstretch{1.2} % Line spacing of 1.3
+
+% Define the page headers using the FancyHdr package and set up for one-sided printing
+\fancyhead{} % Clears all page headers and footers
+\rhead{\thepage} % Sets the right side header to show the page number
+\lhead{} % Clears the left side page header
+
+\pagestyle{fancy} % Finally, use the "fancy" page style to implement the FancyHdr headers
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % New command to make the lines in the title page
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+
+\definecolor{darkblue}{rgb}{0.1,0.3,0.7}
+\definecolor{red}{rgb}{1.0,0.2,0.2}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.2}
+
+
+\begin{titlepage}
+
+\begin{tabular}{cc}
+
+\begin{minipage}{0.49\textwidth}
+\begin{flushleft}
+\includegraphics[scale=0.1]{./Figures/logoingisbleu.jpg} % University/department logo - uncomment to place it
+\end{flushleft}
+\end{minipage}
+
+&
+ \begin{minipage}{0.42\textwidth}
+\begin{flushright}
+\includegraphics[scale=0.5]{./Figures/epl.jpg} % University/department logo - uncomment to place it
+\end{flushright}
+\end{minipage}
+\end{tabular} 
+
+
+
+\begin{center}
+\vspace{13em}
+\textsc{\LARGE lingi2263 : Computational Linguistics }\\[2cm] % University name
+
+ \vspace{1em}
+\HRule \\[0.5cm] % Horizontal line
+{\huge  Group 2 : Project 2}\\[0.35cm] % Thesis title
+\HRule \\[1.5cm] % Horizontal line
+ 
+
+\begin{tabular}{ccc}
+\begin{minipage}{0.55\textwidth}
+\begin{flushleft} \large
+\emph{Authors:}\\{
+Crochelet Martin (2236-10-00)\\
+Baugnies Benjamin (6020-10-00)}
+\end{flushleft}
+\end{minipage} & \begin{minipage}{0.41\textwidth}
+\centering
+\begin{flushright} \large
+\emph{Professor:}\\{
+Pierre Dupont\\
+Cédric Fairon\\
+}
+\end{flushright}
+\end{minipage}\\[3cm] \\ 
+\end{tabular} 
+
+\vspace{4em}
+
+
+ \begin{center}
+{\large 2013 - 2014}\\[4cm] % Date 
+ \end{center}
+
+
+\vfill
+\end{center}
+
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+
+\pagestyle{fancy} % The page style headers have been "empty" all this time, now use the "fancy" headers as defined before to bring them back
+
+%\lhead{\vspace{1em}\emph{Contents}} % Set the left side page header to "Contents"
+%\tableofcontents % Write out the Table of Contents
+
+%\lhead{\emph{List of Figures}} % Set the left side page header to "List of Figures"
+%\listoffigures % Write out the List of Figures
+
+%\lhead{\emph{List of Tables}} % Set the left side page header to "List of Tables"
+%\listoftables % Write out the List of Tables
+
+%----------------------------------------------------------------------------------------
+%	ABBREVIATIONS
+%----------------------------------------------------------------------------------------
+%
+%\clearpage % Start a new page
+%
+%\setstretch{1.5} % Set the line spacing to 1.5, this makes the following tables easier to read
+%
+%\lhead{\emph{Abbreviations}} % Set the left side page header to "Abbreviations"
+%\listofsymbols{ll} % Include a list of Abbreviations (a table of two columns)
+%{
+%\textbf{ANT1} & \textbf{A}\textbf{N}\textbf{T}agoniste \textbf{1} \\
+%}
+
+
+
+%UTC\nomenclature{UTC}{Coordinated Universal Time} is 3 hours behind ADT\nomenclature{ADT}{Atlantic Daylight Time} and 10 hours ahead of EST\nomenclature{EST}{Eastern Standard Time}.
+%\printnomenclature
+%\small\hfill Created by http://texblog.org
+
+
+%----------------------------------------------------------------------------------------
+%	RAPPORT CONTENT - CHAPTERS
+%----------------------------------------------------------------------------------------
+
+\section{Tags and words statistics}
+The first part of the assignment consisted of creating a Lexicon based on the training corpus, and extracting some general information about the words and tags it contains. Our lexicon is limited to the 5000 most common words. Other words are replaced by the \texttt{<UNK>} token in both the training and test files. Among these words, we extracted the 10 most common words. They are summarized along with their frequency in table \ref{words}.
+\begin{table}[!h]
+\centering
+\begin{tabular}{ | c | c | c | }
+\hline
+Rank & Word & \# occurences \\ \hline
+1 & THE & 59466 \\
+2 & , & 49639 \\
+3 & . & 41859 \\
+4 & OF & 31067 \\
+5 & AND & 24709 \\
+6 & TO & 22190 \\
+7 & A & 19718 \\
+8 & IN & 18230 \\
+9 & THAT & 8974 \\
+10 & IS &8623 \\ \hline
+\end{tabular}
+\caption{Most common words}
+\label{words}
+\end{table}
+
+While parsing the texts, we found 187 different tags. The 10 most and least common of these can be found below \ref{tags}.
+\begin{table}[!h]
+\centering
+\begin{tabular}{ | c | c | c | | c | c | c | }
+\hline
+& Most Common & & & Least Common & \\ \hline
+Rank & Tag & \# occurences  & Rank & Tag & \# occurences\\ \hline
+1 & NN & 143023 & -1 & JJR+CS & 1\\
+2 & IN & 104385 & -2 & JJ\$ & 1\\
+3 & AT & 84266 & -3 & NN+HVD & 1\\
+4 & JJ & 58365 & -4 & RBR+CS & 1\\
+5 & . & 51997 & -5 & IN+IN & 1\\
+6 & , & 49641 & -6 & NR+MD & 1\\
+7 & NNS & 49412 & -7 & IN+NP & 1\\
+8 & NP & 32992 & -8 & WRB+BER & 1\\
+9 & CC & 32496 & -9 & WRB+MD & 1\\
+10 & RB & 31147 & -10 & NP+MD & 1\\ \hline
+\end{tabular}
+\caption{Most and least common tags}
+\label{tags}
+\end{table}
+
+We can see that the most rarely seen tags are almost all compound tags. Moreover, the list of least used tags is actually not very precise since a lot more than 10 tags are used only once. The presented list here is just a chosen subset of those tags but we could have chosen other tags. 
+
+\paragraph*{} Finally, we have a count of the number of tokens and segments in each file (both training and test). We added the number of types as we will talk about it later for the uniquely tagged words.
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{ | c | c | c | }
+\hline
+& Training & Test \\ \hline
+Tokens & 987341 & 173524 \\ 
+Segments & 48461 & 8552 \\
+Types & 52016 & 6550\\ \hline
+\end{tabular}
+\caption{Token \& segment count}
+\label{count}
+\end{table}
+
+\section{Baseline Tagger}
+For this part of the assignement, we were to tag all the words of the test file using only the most common tag for each word. To do this, we first create and copy of the "lexiconized" test file (with '<UNK>' for words that are not in the top 5000) in which we removed all the existing tags. We then, for each word in the lexicon, choose a single best tag in terms of number of occurences for that particular word. 
+
+\paragraph*{}For example, we have a entry for 'THROUGH' in our lexicon with two possible tags: 'RP' with 56 occurences and 'IN' with 781. The 'IN' tag is chosen, and therefore, all occurences of 'THROUGH' in the test file will be tagged as such.
+
+\paragraph*{}Once the while document has been tagged using the same conventions as in the original, we compare the tags to those in the lexiconized document. Out of 173524 tokens, this baseline tagger tagged 162905 correctly for 10619 errors, given us an error rate of 6.12\%. This is slightly higher than we expected. Indeed, we had found that in the training data, 41125 of the 52016 types were uniquely tagged. This represented 392544 out of the 987341 tokens, or almost 40\%. Due to this large number of uniquely tagged tokens, the average word has only 1.1243 tags. This means that choosing randomly among the observed tags (as opposed to the best tag like we have done) would yield an accuracy of 88.94\%.
+
+\paragraph*{} The average error per tag calculated by
+$$ \frac{\sum_{tags}errors(tag)/occurences(tag)}{\# tags}$$
+was of 18.47\%. This is much higher than the global error rate, and therefore indicates that rarely used tags are more prone to error.
+
+\paragraph*{}Finally, we can have a look at some tags in particular. We first take the 'JJS' tag. This tag is used 44 times in the test file, but the 'NN' tag was chosen instead 19 times (43.18\%), giving it an accuracy of 56.82\%. On the other hand, the 'NP' tag was used 2972 times. While more distinct tags were given by error (the two most common being 'JJ' 81 times or 2.73\% and 'NN' 112 times or 3.77\%), the tag had a 91.42\% accuracy. This seems to confirm what was found in the previous paragraph.
+
+\section{HMM Tagger}
+
+This last part has been more difficult than foreseen: indeed, we have been able to compute the emission and transition matrix from the training set however, computing the whole set of possible states for a given segment has been quite a challenge. In the joined code, you can see that the whole HMM POS-tagger has been implemented less this challenging part. We expect the tagger to be a lot more slower than the baseline one since it has to access the matrix for each possible state which is a lot more complex than the normal, baseline, version. Moreover, our choice of smoothing is a little bit unorthodox since we simple use a default epsilon value; a better implementation would follow the formula given at slide 18 of the fifth lecture. 
+
+About the evaluation of the tagger, we have obviously not been able to execute it however, the implementation is given in the python file compare.py. 
+
+%\mainmatter % Begin numeric (1,2,3...) page numbering
+
+\pagestyle{fancy} % Return the page headers back to the "fancy" style
+
+% Include the chapters of the thesis as separate files from the Chapters folder
+% Uncomment the lines as you write the chapters
+\pagebreak
+%\input{./Chapters/introduction.tex}
+%\input{./Chapters/high_level_view_of_the_website.tex}
+%\pagebreak
+%\input{./Chapters/functional_requirements.tex}
+%\pagebreak
+%\input{./Chapters/non_functional_requirements.tex}
+%\pagebreak
+%\input{./Chapters/clarification_questions_and_suggestions.tex}
+%\pagebreak
+%\input{./Chapters/selected_extensions.tex}
+%\input{./Chapters/conclusion.tex}
+%\input{./Chapters/Introduction.tex}
+%\input{./Chapters/ContexteGlobal.tex}
+%\input{./Chapters/Localite.tex}
+%\input{./Chapters/abreprob.tex}
+%\input{./Chapters/Etatdelart.tex}
+%\input{./Chapters/Recommandations.tex}
+%\input{./Chapters/ccl.tex}
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+%\newpage
+%\section{Bibliography}
+%\label{Bibliography}
+%
+%\lhead{\vspace{1em}\emph{Bibliography}} % Change the page header to say "Bibliography"
+%
+%\bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+%
+%\bibliography{Bibliography} % The references (bibliography) information are stored in the file named "Bibliography.bib"
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - APPENDICES
+%----------------------------------------------------------------------------------------
+
+%\addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+%
+%\appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
+%
+%% Include the appendices of the thesis as separate files from the Appendices folder
+%% Uncomment the lines as you write the Appendices
+%
+%\input{./Appendices/resultats}
+%\input{./Appendices/finances}
+%\input{./Appendices/methodo}
+%
+%\addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+%
+%%\backmatter
+
+
+\end{document}  
