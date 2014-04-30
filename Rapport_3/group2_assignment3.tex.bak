@@ -1,0 +1,127 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[10pt, a4paper, oneside]{article} % Paper size, default font size and one-sided paper
+
+\usepackage{nomencl}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{epstopdf}
+\usepackage[final]{pdfpages}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[square, numbers, comma, sort&compress]{natbib} 
+%\makenomenclature
+\renewcommand{\nomname}{Time Zones}
+\newcommand{\solidareit}{\textsc{s}olidare-\textsc{it} }
+\title{\ttitle} % Defines the thesis title - don't touch this
+
+\begin{document}
+%\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\setstretch{1.2} % Line spacing of 1.3
+
+% Define the page headers using the FancyHdr package and set up for one-sided printing
+\fancyhead{} % Clears all page headers and footers
+\rhead{\thepage} % Sets the right side header to show the page number
+\lhead{} % Clears the left side page header
+
+\pagestyle{fancy} % Finally, use the "fancy" page style to implement the FancyHdr headers
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % New command to make the lines in the title page
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+
+\definecolor{darkblue}{rgb}{0.1,0.3,0.7}
+\definecolor{red}{rgb}{1.0,0.2,0.2}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.2}
+
+
+\begin{titlepage}
+
+\begin{tabular}{cc}
+
+\begin{minipage}{0.49\textwidth}
+\begin{flushleft}
+\includegraphics[scale=0.1]{./Figures/logoingisbleu.jpg} % University/department logo - uncomment to place it
+\end{flushleft}
+\end{minipage}
+
+&
+ \begin{minipage}{0.42\textwidth}
+\begin{flushright}
+\includegraphics[scale=0.5]{./Figures/epl.jpg} % University/department logo - uncomment to place it
+\end{flushright}
+\end{minipage}
+\end{tabular} 
+
+
+
+\begin{center}
+\vspace{13em}
+\textsc{\LARGE lingi2263 : Computational Linguistics }\\[2cm] % University name
+
+ \vspace{1em}
+\HRule \\[0.5cm] % Horizontal line
+{\huge  Group 2 : Project 3}\\[0.35cm] % Thesis title
+\HRule \\[1.5cm] % Horizontal line
+ 
+
+\begin{tabular}{ccc}
+\begin{minipage}{0.55\textwidth}
+\begin{flushleft} \large
+\emph{Authors:}\\{
+Crochelet Martin (2236-10-00)\\
+Baugnies Benjamin (6020-10-00)}
+\end{flushleft}
+\end{minipage} & \begin{minipage}{0.41\textwidth}
+\centering
+\begin{flushright} \large
+\emph{Professor:}\\{
+Pierre Dupont\\
+Cédric Fairon\\
+}
+\end{flushright}
+\end{minipage}\\[3cm] \\ 
+\end{tabular} 
+
+\vspace{4em}
+
+
+ \begin{center}
+{\large 2013 - 2014}\\[4cm] % Date 
+ \end{center}
+
+
+\vfill
+\end{center}
+
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+
+\pagestyle{fancy} % The page style headers have been "empty" all this time, now use the "fancy" headers as defined before to bring them 
+\section{TF-IDF}
+\section{The underpinnings of Log-Entropy}
+\subsection{Why is there a ‘+1’ in the logarithm function ?}
+It is simply because the logarithm function is defined on the domain of the strictly positive real: it is possible for $tf_{ij}$ to be equal to 0 simply because of it's definition: it is possible the $i^{th}$ document does not contain the $j^{th}$ therm. Hence, the '+1' allows us to shift the domain of $tf_{ij}$ from $[0,\; \vert\vert document_i \vert\vert ]$ to $[1,\; \vert\vert document_i \vert\vert +1 ]$ on which the logarithm function is entirely defined.
+\subsection{What is the point to apply the logarithm function to the term frequency instead of plugging it directly in the formula ?}
+This allows us to diminish the relative importance of the high frequency words versus the middle ones. Indeed, the logarithm function is defined so that, compared with the linear function suggested, it keeps the middle frequencies importance while really lowering the high frequencies. This effect allows us to take into account the fact that some words tends to appear in every document while not being decisive for de description of the document (words such as "the", "a", "b", etc.). Moreover, some other words only appear a few times in the document in question while being really important for the definition/description of it; the importance of theses words is better taken into account by the logarithm function than by the linear one.
+\subsection{Could explain intuitively the mechanics of the global weight ? And why is there a division by log n? (Hint: What does the entropy of a distribution represents?)}
+First, let us remark that the global weight can easily be written as: \begin{equation}
+g_{ij} = 1 - \frac{-\Sigma_i\; p_{ij}\cdot \log p_{ij}}{\log n}
+\end{equation}
+With this particular notation, the resemblance with formula of the entropy for the distribution $p_{ij}$ is quite hard to miss ($\Sigma_i\; p_{ij}\cdot \log p_{ij}$). This entropy measures the uncertainty of the location of $j^{th}$ in the $i^{th}$ document. Now we focus on the division by the $\log n$ which is simple too: the maximum value of this entropy is actually $\log n$ meaning that we project the domain of the entropy of the distribution onto a domain bounded by 0 and 1. Then, we inverse the sense of the domain by the operation of subtraction: 
+\end{document}  

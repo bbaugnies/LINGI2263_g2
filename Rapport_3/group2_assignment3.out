@@ -1,0 +1,5 @@
+\BOOKMARK [1][-]{section.1}{TF-IDF}{}% 1
+\BOOKMARK [1][-]{section.2}{The underpinnings of Log-Entropy}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Why is there a \217+1\220 in the logarithm function ?}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{What is the point to apply the logarithm function to the term frequency instead of plugging it directly in the formula ?}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Could explain intuitively the mechanics of the global weight ? And why is there a division by log n? \(Hint: What does the entropy of a distribution represents?\)}{section.2}% 5
